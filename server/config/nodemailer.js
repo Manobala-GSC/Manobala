@@ -8,8 +8,7 @@ const transporter=nodemailer.createTransport({
         pass:'AsMJdyxk4T6UrbX2'
     },
 
-    logger: true,
-    debug: true,
+    
 });
 transporter.verify((error, success) => {
     if (error) {

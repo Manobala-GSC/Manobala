@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
  const connectDB = async () => {
     try {
-        await mongoose.connect("mongodb://127.0.0.1:27017/GSC", {
+        await mongoose.connect("mongodb+srv://jack:jack@cluster0.xjckq.mongodb.net/GSC", {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
