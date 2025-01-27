@@ -1,0 +1,90 @@
+/* Message.css */
+.message {
+    padding: 12px 16px;
+    margin: 8px 0;
+    max-width: 80%;
+    border-radius: 12px;
+    line-height: 1.5;
+}
+
+.user {
+    background-color: #2d2d3d;
+    margin-left: auto;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.bot {
+    background-color: #373750;
+    margin-right: auto;
+    color: white;
+    border-bottom-left-radius: 4px;
+}
+
+.message-content {
+    word-wrap: break-word;
+    font-size: 20px;
+}
+
+/* Markdown Styles */
+.markdown-p {
+    margin: 8px 0;
+}
+
+.markdown-h1 {
+    font-size: 1.5em;
+    margin: 16px 0 8px 0;
+    font-weight: 600;
+}
+
+.markdown-h2 {
+    font-size: 1.3em;
+    margin: 14px 0 7px 0;
+    font-weight: 600;
+}
+
+.markdown-h3 {
+    font-size: 1.1em;
+    margin: 12px 0 6px 0;
+    font-weight: 600;
+}
+
+.markdown-ul, .markdown-ol {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.markdown-li {
+    margin: 4px 0;
+}
+
+.markdown-code {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.markdown-pre {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 8px 0;
+}
+
+/* Animation for new messages */
+.message {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
