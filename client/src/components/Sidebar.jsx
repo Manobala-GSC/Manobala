@@ -18,9 +18,9 @@ const Sidebar = ({
       <div className="conversations-list">
         {conversations.map((conv) => (
           <div 
-            key={conv.id}
-            className={`conversation-item ${conv.id === activeConversation ? 'active' : ''}`}
-            onClick={() => onConversationClick(conv.id)}
+            key={conv._id}
+            className={`conversation-item ${conv._id === activeConversation ? 'active' : ''}`}
+            onClick={() => onConversationClick(conv._id)}
           >
             <div className="conversation-title">{conv.title}</div>
             <div className="conversation-meta">
@@ -31,7 +31,7 @@ const Sidebar = ({
                 className="delete-conversation-btn"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDeleteConversation(conv.id);
+                  onDeleteConversation(conv._id);
                 }}
               >
                 ×

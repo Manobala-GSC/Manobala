@@ -6,6 +6,7 @@ import connectDB from './config/mongodb.js';
 import authRouter from './routes/authRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import chatRouter from './routes/chatRoutes.js';
+import conversationRouter from './routes/conversationRoutes.js';
 
 dotenv.config();
 const app=express();
@@ -26,6 +27,7 @@ const port=process.env.PORT|| 5000;
 app.use('/api/auth',authRouter)
 app.use('/api/user',userRouter)
 app.use('/api/chat', chatRouter)
+app.use('/api/conversations', conversationRouter)
 app.listen(port,()=>{
     console.log(`App is listening ${port}`);
 })
