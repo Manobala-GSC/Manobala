@@ -1,7 +1,6 @@
 // Message.jsx
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import "./Message.css";
 
 const Message = ({ sender, text }) => {
   return (

@@ -1,6 +1,5 @@
 // MessageInput.jsx
 import React, { useState } from "react";
-import "./MessageInput.css";
 
 const MessageInput = ({ sendMessage }) => {
   const [inputValue, setInputValue] = useState("");

@@ -5,7 +5,6 @@ import Message from "./Message";
 import MessageInput from "./MessageInput";
 import Sidebar from "../components/Sidebar";
 import { AppContent } from '../context/AppContext';
-import "./ChatBot.css";
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]);
