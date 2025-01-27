@@ -24,18 +24,23 @@ const MessageInput = ({ sendMessage }) => {
   };
 
   return (
-    <div className="message-input-container">
-      <input
-        className="message-input"
-        type="text"
-        placeholder="Type your message..."
-        value={inputValue}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown} // Detect "Enter" key press
-      />
-      <button className="send-button" onClick={handleSendClick}>
-        Send
-      </button>
+    <div className="border-t border-gray-700 p-6">
+      <div className="flex items-end space-x-2">
+        <textarea
+          className="flex-grow bg-gray-800 text-white rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[80px]"
+          rows="3"
+          placeholder="Type your message..."
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+        />
+        <button
+          className="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onClick={handleSendClick}
+        >
+          Send
+        </button>
+      </div>
     </div>
   );
 };
