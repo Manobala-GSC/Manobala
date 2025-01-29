@@ -7,6 +7,7 @@ import authRouter from './routes/authRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import chatRouter from './routes/chatRoutes.js';
 import conversationRouter from './routes/conversationRoutes.js';
+import blogRouter from './routes/blogRoutes.js';
 
 dotenv.config();
 const app=express();
@@ -31,6 +32,8 @@ app.use('/api/conversations', conversationRouter)
 app.listen(port,()=>{
     console.log(`App is listening ${port}`);
 })
+
+app.use('/api/blogs', blogRouter);
 
 
 
