@@ -121,4 +121,28 @@ export const deleteBlog = async (req, res) => {
       message: error.message
     });
   }
-}; 
+};
+
+export const searchBlogs = async (req, res) => {
+  try {
+    const { searchTerm } = req.query;
+    
+    const blogs = await Blog.find({
+      $or: [
+        { tags: { $regex: searchTerm, $options: 'i' } },
+        { title: { $regex: searchTerm, $options: 'i' } },
+        { content: { $regex: searchTerm, $options: 'i' } }
+      ]
+    }).populate('author', 'name').sort({ createdAt: -1 });
+    
+    res.json({
+      success: true,
+      blogs
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

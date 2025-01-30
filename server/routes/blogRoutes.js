@@ -4,7 +4,8 @@ import {
   getMyBlogs,
   createBlog,
   updateBlog,
-  deleteBlog
+  deleteBlog,
+  searchBlogs
 } from '../controllers/blogController.js';
 import userAuth from '../middleware/userAuth.js';
 
@@ -18,5 +19,6 @@ blogRouter.get('/my-blogs', userAuth, getMyBlogs);
 blogRouter.post('/', userAuth, createBlog);
 blogRouter.put('/:blogId', userAuth, updateBlog);
 blogRouter.delete('/:blogId', userAuth, deleteBlog);
+blogRouter.get('/search', searchBlogs);
 
 export default blogRouter; 
