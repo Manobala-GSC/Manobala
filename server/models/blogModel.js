@@ -7,6 +7,20 @@ const blogSchema = new mongoose.Schema({
   },
   content: {
     type: String,
+    required: true,
+    get: function(data) {
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        return data;
+      }
+    },
+    set: function(data) {
+      return typeof data === 'string' ? data : JSON.stringify(data);
+    }
+  },
+  previewContent: {
+    type: String,
     required: true
   },
   author: {
@@ -27,7 +41,10 @@ const blogSchema = new mongoose.Schema({
   }
 });
 
+// Add compound index for efficient sorting and filtering
+blogSchema.index({ createdAt: -1, author: 1 });
+
 // Add text index for search functionality
-blogSchema.index({ title: 'text', content: 'text', tags: 'text' });
+blogSchema.index({ title: 'text', previewContent: 'text', tags: 'text' });
 
 export default mongoose.model('Blog', blogSchema);

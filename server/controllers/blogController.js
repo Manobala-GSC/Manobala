@@ -3,13 +3,31 @@ import User from '../models/usermodel.js';
 
 export const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find()
-      .populate('author', 'name')
-      .sort({ createdAt: -1 });
-    
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 9;
+    const skip = (page - 1) * limit;
+
+    const [blogs, total] = await Promise.all([
+      Blog.find()
+        .populate('author', 'name')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec()
+        .then(blogs => blogs.map(blog => ({
+          ...blog,
+          previewContent: blog.previewContent || blog.content.replace(/<img[^>]*>/g, '')
+        }))),
+      Blog.countDocuments()
+    ]);
+
     res.json({
       success: true,
-      blogs
+      blogs,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      hasMore: skip + blogs.length < total
     });
   } catch (error) {
     res.status(500).json({
@@ -21,12 +39,30 @@ export const getAllBlogs = async (req, res) => {
 
 export const getMyBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({ author: req.body.userId })
-      .sort({ createdAt: -1 });
-    
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 9;
+    const skip = (page - 1) * limit;
+
+    const [blogs, total] = await Promise.all([
+      Blog.find({ author: req.body.userId })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec()
+        .then(blogs => blogs.map(blog => ({
+          ...blog,
+          previewContent: blog.previewContent || blog.content.replace(/<img[^>]*>/g, '')
+        }))),
+      Blog.countDocuments({ author: req.body.userId })
+    ]);
+
     res.json({
       success: true,
-      blogs
+      blogs,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      hasMore: skip + blogs.length < total
     });
   } catch (error) {
     res.status(500).json({
@@ -39,13 +75,16 @@ export const getMyBlogs = async (req, res) => {
 export const createBlog = async (req, res) => {
   try {
     const { title, content, tags } = req.body;
+    const previewContent = content.replace(/<img[^>]*>/g, '');
+
     const blog = new Blog({
       title,
       content,
+      previewContent,
       tags,
       author: req.body.userId
     });
-    
+
     await blog.save();
     res.json({
       success: true,
@@ -64,6 +103,7 @@ export const updateBlog = async (req, res) => {
   try {
     const { blogId } = req.params;
     const { title, content, tags } = req.body;
+    const previewContent = content.replace(/<img[^>]*>/g, '');
     
     const blog = await Blog.findOne({
       _id: blogId,
@@ -79,6 +119,7 @@ export const updateBlog = async (req, res) => {
     
     blog.title = title;
     blog.content = content;
+    blog.previewContent = previewContent;
     blog.tags = tags;
     blog.updatedAt = Date.now();
     
