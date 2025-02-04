@@ -54,6 +54,7 @@ function Navbar({ stayOnPage = false }) {
             <button onClick={() => navigate('/blogs')} className="text-gray-800 hover:text-gray-600">Blogs</button>
             <button onClick={() => navigate('/about')} className="text-gray-800 hover:text-gray-600">About</button>
             <button onClick={() => navigate('/resources')} className="text-gray-800 hover:text-gray-600">Resources</button>
+            <button onClick={() => navigate('/forum')} className="text-gray-800 hover:text-gray-600">Forum</button>
             <button onClick={() => navigate('/contact')} className="text-gray-800 hover:text-gray-600">Contact</button>
             <button onClick={() => {
               if (!userData) {

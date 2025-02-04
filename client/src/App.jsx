@@ -14,6 +14,7 @@ import Contact from "./pages/Contact";
 import Resources from "./pages/Resources";
 import BlogEditor from "./pages/BlogEditor";
 import BlogView from './pages/BlogView';
+import Forum from './pages/Forum';
 
 
 const router = createBrowserRouter(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
       <Route path="/blog/new" element={<BlogEditor />} />
       <Route path="/blog/edit/:blogId" element={<BlogEditor />} />
       <Route path="/blog/:blogId" element={<BlogView />} />
+      <Route path="/forum" element={<Forum />} />
     </>
     )
   );
