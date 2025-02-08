@@ -57,4 +57,33 @@ export const getDashboardStats = async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
+};
+
+export const getAllBlogs = async (req, res) => {
+    try {
+        const blogs = await Blog.find()
+            .populate('author', 'name email')
+            .sort({ createdAt: -1 });
+        
+        res.json({
+            success: true,
+            blogs
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const deleteBlog = async (req, res) => {
+    try {
+        const { blogId } = req.params;
+        await Blog.findByIdAndDelete(blogId);
+        
+        res.json({
+            success: true,
+            message: 'Blog deleted successfully'
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 }; 

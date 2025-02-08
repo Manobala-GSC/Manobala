@@ -4,7 +4,9 @@ import {
     getAllUsers, 
     updateUser, 
     deleteUser,
-    getDashboardStats 
+    getDashboardStats,
+    getAllBlogs,
+    deleteBlog 
 } from '../controllers/adminController.js';
 
 const adminRouter = express.Router();
@@ -14,5 +16,7 @@ adminRouter.get('/users', adminAuth, getAllUsers);
 adminRouter.put('/users/:userId', adminAuth, updateUser);
 adminRouter.delete('/users/:userId', adminAuth, deleteUser);
 adminRouter.get('/dashboard-stats', adminAuth, getDashboardStats);
+adminRouter.get('/blogs', adminAuth, getAllBlogs);
+adminRouter.delete('/blogs/:blogId', adminAuth, deleteBlog);
 
 export default adminRouter; 

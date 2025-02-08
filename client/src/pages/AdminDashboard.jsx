@@ -8,6 +8,7 @@ function AdminDashboard() {
     const { backendUrl } = useContext(AppContent);
     const [users, setUsers] = useState([]);
     const [stats, setStats] = useState(null);
+    const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const fetchUsers = async () => {
@@ -24,10 +25,9 @@ function AdminDashboard() {
             toast.error(error.response?.data?.message || 'Error fetching users');
         }
     };
-
     const fetchStats = async () => {
         try {
-            const { data } = await axios.get('/api/admin/dashboard-stats', {
+            const { data } = await axios.get(`${backendUrl}/api/admin/dashboard-stats`, {
                 withCredentials: true
             });
             if (data.success) {
@@ -37,6 +37,19 @@ function AdminDashboard() {
             }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Error fetching stats');
+        }
+    };
+
+    const fetchBlogs = async () => {
+        try {
+            const { data } = await axios.get(`${backendUrl}/api/admin/blogs`, {
+                withCredentials: true
+            });
+            if (data.success) {
+                setBlogs(data.blogs);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Error fetching blogs');
         }
     };
 
@@ -60,8 +73,26 @@ function AdminDashboard() {
         }
     };
 
+    const handleDeleteBlog = async (blogId) => {
+        if (!window.confirm('Are you sure you want to delete this blog?')) return;
+        
+        try {
+            const { data } = await axios.delete(`${backendUrl}/api/admin/blogs/${blogId}`, {
+                withCredentials: true
+            });
+            if (data.success) {
+                toast.success('Blog deleted successfully');
+                setBlogs(blogs.filter(blog => blog._id !== blogId));
+                // Refresh stats to update blog count
+                fetchStats();
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Error deleting blog');
+        }
+    };
+
     useEffect(() => {
-        Promise.all([fetchUsers(), fetchStats()])
+        Promise.all([fetchUsers(), fetchStats(), fetchBlogs()])
             .finally(() => setLoading(false));
     }, []);
 
@@ -132,6 +163,49 @@ function AdminDashboard() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Blogs Section */}
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                    <h2 className="text-xl font-bold p-6 bg-gray-50 border-b">Manage Blogs</h2>
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {blogs.map(blog => (
+                                    <tr key={blog._id}>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm font-medium text-gray-900">{blog.title}</div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-gray-900">{blog.author.name}</div>
+                                            <div className="text-sm text-gray-500">{blog.author.email}</div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm text-gray-900">
+                                                {new Date(blog.createdAt).toLocaleDateString()}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                            <button
+                                                onClick={() => handleDeleteBlog(blog._id)}
+                                                className="text-red-600 hover:text-red-900"
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
