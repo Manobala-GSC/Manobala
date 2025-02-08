@@ -64,6 +64,14 @@ function Navbar({ stayOnPage = false }) {
                 navigate('/chatbot');
               }
             }} className="text-gray-800 hover:text-gray-600">Chatbot</button>
+            {userData && userData.email === 'gscteam12345@gmail.com' && (
+                <button 
+                    onClick={() => navigate('/admin')} 
+                    className="text-gray-800 hover:text-gray-600"
+                >
+                    Admin Dashboard
+                </button>
+            )}
         </div>
         {userData? <div className="w-8 h-8 flex justify-center items-center rounded-full text-white bg-black relative group ">
           {userData.name[0].toUpperCase()}

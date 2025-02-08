@@ -11,6 +11,7 @@ import blogRouter from './routes/blogRoutes.js';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import forumRouter from './routes/forumRoutes.js';
+import adminRouter from './routes/adminRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -40,6 +41,7 @@ app.use('/api/user',userRouter)
 app.use('/api/chat', chatRouter)
 app.use('/api/conversations', conversationRouter)
 app.use('/api/blogs', blogRouter);
+app.use('/api/admin', adminRouter)
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

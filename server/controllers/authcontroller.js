@@ -169,7 +169,17 @@ export const isAuthenticated = async (req, res) => {
         if (!decoded) {
             return res.status(401).json({ success: false, message: "Invalid token" });
         }
-        return res.json({ success: true });
+        
+        // Get user data and send it back
+        const user = await User.findById(decoded.id).select('-password');
+        if (!user) {
+            return res.status(401).json({ success: false, message: "User not found" });
+        }
+        
+        return res.json({ 
+            success: true,
+            userData: user 
+        });
     } catch (error) {
         return res.status(401).json({ success: false, message: error.message });
     }

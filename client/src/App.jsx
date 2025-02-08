@@ -15,6 +15,8 @@ import Resources from "./pages/Resources";
 import BlogEditor from "./pages/BlogEditor";
 import BlogView from './pages/BlogView';
 import Forum from './pages/Forum';
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminRoute from './components/AdminRoute';
 
 
 const router = createBrowserRouter(
@@ -34,6 +36,15 @@ const router = createBrowserRouter(
       <Route path="/blog/edit/:blogId" element={<BlogEditor />} />
       <Route path="/blog/:blogId" element={<BlogView />} />
       <Route path="/forum" element={<Forum />} />
+      <Route 
+        path="/admin" 
+        element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        } 
+      />
+      
     </>
     )
   );
