@@ -21,7 +21,7 @@ export const register = async (req, res) => {
 
         await user.save();
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_secret, { expiresIn: '7d' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.cookie('token', token, {
             httpOnly: true,
@@ -63,7 +63,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid Password' });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_secret, { expiresIn: '7d' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.cookie('token', token, {
             httpOnly: true,
@@ -161,29 +161,32 @@ export const verfiyEmail=async(req,res)=>{
 }
 export const isAuthenticated = async (req, res) => {
     try {
-        const { token } = req.cookies;
-        if (!token) {
-            return res.status(401).json({ success: false, message: "Not authenticated" });
-        }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (!decoded) {
-            return res.status(401).json({ success: false, message: "Invalid token" });
-        }
+        const { userId } = req.body;
+        const user = await User.findById(userId);
         
-        // Get user data and send it back
-        const user = await User.findById(decoded.id).select('-password');
         if (!user) {
-            return res.status(401).json({ success: false, message: "User not found" });
+            return res.json({
+                success: false,
+                message: "User not found"
+            });
         }
         
-        return res.json({ 
+        res.json({
             success: true,
-            userData: user 
+            userData: {
+                _id: user._id.toString(),
+                name: user.name,
+                email: user.email,
+                isAccountVerified: user.isAccountVerified
+            }
         });
     } catch (error) {
-        return res.status(401).json({ success: false, message: error.message });
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
-}
+};
 export const sendresetotp=async(req,res)=>{
     const{email}=req.body;
     if(!email){

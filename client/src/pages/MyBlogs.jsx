@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AppContent } from '../context/AppContext';
 import Navbar from '../components/Navbar';
 import { format } from 'date-fns';
+import BlogCard from '../components/blog/BlogCard';
+import { Edit, Plus, Loader2 } from 'lucide-react';
 
 function MyBlogs() {
   const [blogs, setBlogs] = useState([]);
@@ -75,12 +77,18 @@ function MyBlogs() {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    if (page > 1) {
+      fetchMyBlogs(page);
+    }
+  }, [page]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const endpoint = editingBlog
-        ? `http://localhost:8000/api/blogs/${editingBlog._id}`
-        : 'http://localhost:8000/api/blogs';
+        ? `${backendUrl}/api/blogs/${editingBlog._id}`
+        : `${backendUrl}/api/blogs`;
 
       const method = editingBlog ? 'put' : 'post';
       const tagsArray = formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
@@ -92,7 +100,7 @@ function MyBlogs() {
 
       if (data.success) {
         toast.success(editingBlog ? 'Blog updated!' : 'Blog created!');
-        fetchMyBlogs();
+        fetchMyBlogs(1);
         setShowCreateModal(false);
         setEditingBlog(null);
         setFormData({ title: '', content: '', tags: '' });
@@ -122,178 +130,151 @@ function MyBlogs() {
     }
   };
 
-  const truncateContent = (content) => {
-    if (!content) return '';
-    const plainText = (content.previewContent || content.content || '')
-      .replace(/<[^>]+>/g, '');
-    return plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
+  // Handle like updates
+  const handleLikeUpdate = (blogId, liked, likeCount) => {
+    setBlogs(prevBlogs => 
+      prevBlogs.map(blog => 
+        blog._id === blogId 
+          ? { ...blog, likes: [...blog.likes] } // Create a new array to trigger re-render
+          : blog
+      )
+    );
   };
 
-  if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navbar />
-      <div className="container mx-auto px-4 py-8 mt-16">
+      <div className="container mx-auto px-4 py-12 mt-16">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">My Blogs</h1>
-          <button
-            onClick={() => navigate('/blog/new')}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">My Stories</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">Manage and edit your published content</p>
+          </div>
+          <button 
+            onClick={() => navigate('/blog/new')} 
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
           >
-            Write Blog
+            <Plus className="h-4 w-4" />
+            New Story
           </button>
         </div>
 
         {initialLoad ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Use index for loading skeleton keys */}
             {[1, 2, 3].map((_, index) => (
-              <div key={`skeleton-${index}`} className="animate-pulse bg-white rounded-lg shadow-md p-6">
-                <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+              <div key={`skeleton-${index}`} className="animate-pulse bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
                 <div className="space-y-3">
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
                 </div>
               </div>
             ))}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogs.map((blog, index) => (
-              <div
-                key={`${blog._id}-${index}`}
-                ref={blogs.length === index + 1 ? lastBlogElementRef : null}
-                className="bg-white rounded-lg shadow-md p-6 cursor-pointer transform transition duration-200 hover:scale-105"
-              >
-                <div 
-                  onClick={() => navigate(`/blog/${blog._id}`)}
-                  className="cursor-pointer"
-                >
-                  <h2 className="text-xl font-semibold mb-2 line-clamp-2">
-                    {blog.title}
-                  </h2>
-                  
-                  <div className="flex items-center text-gray-600 text-sm mb-3">
-                    <span>{format(new Date(blog.createdAt), 'MMM d, yyyy')}</span>
-                  </div>
-
-                  <p className="text-gray-600 mb-4 line-clamp-3">
-                    {truncateContent(blog)}
-                  </p>
-
-                  {blog.tags && blog.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {blog.tags.map((tag, tagIndex) => (
-                        <span
-                          key={`${blog._id}-tag-${tagIndex}`}
-                          className="bg-gray-100 px-2 py-1 rounded-full text-sm text-gray-600"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+        ) : blogs.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {blogs.map((blog, index) => {
+                if (blogs.length === index + 1 && hasMore) {
+                  return (
+                    <div ref={lastBlogElementRef} key={blog._id}>
+                      <BlogCard blog={blog} onLikeUpdate={handleLikeUpdate} />
                     </div>
-                  )}
-                </div>
-
-                <div className="flex justify-end space-x-2 mt-4">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/blog/edit/${blog._id}`);
-                    }}
-                    className="text-blue-500 hover:text-blue-700 px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(blog._id);
-                    }}
-                    className="text-red-500 hover:text-red-700 px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
+                  );
+                } else {
+                  return <BlogCard key={blog._id} blog={blog} onLikeUpdate={handleLikeUpdate} />;
+                }
+              })}
+            </div>
+            
+            {loading && !initialLoad && (
+              <div className="flex justify-center mt-8">
+                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading more stories
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-        
-        {loading && !initialLoad && (
-          <div className="flex justify-center mt-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-          </div>
-        )}
-
-        {/* Create/Edit Modal */}
-        {showCreateModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-              <h2 className="text-2xl font-bold mb-4">
-                {editingBlog ? 'Edit Blog' : 'Create New Blog'}
-              </h2>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Title</label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full border rounded-lg p-2"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Content</label>
-                  <textarea
-                    value={formData.content}
-                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    className="w-full border rounded-lg p-2 h-40"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Tags (comma-separated)</label>
-                  <input
-                    type="text"
-                    value={formData.tags}
-                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                    className="w-full border rounded-lg p-2"
-                    placeholder="tech, programming, web"
-                  />
-                </div>
-                <div className="flex justify-end space-x-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowCreateModal(false);
-                      setEditingBlog(null);
-                      setFormData({ title: '', content: '', tags: '' });
-                    }}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                  >
-                    {editingBlog ? 'Update' : 'Create'}
-                  </button>
-                </div>
-              </form>
-            </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
+            <h3 className="text-xl font-medium mb-2 text-gray-900 dark:text-gray-100">You haven't written any stories yet</h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">Start creating content and sharing your ideas with the world</p>
+            <button 
+              onClick={() => navigate('/blog/new')} 
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 mx-auto"
+            >
+              <Edit className="h-4 w-4" />
+              Write your first story
+            </button>
           </div>
         )}
       </div>
+
+      {/* Create/Edit Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl">
+            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+              {editingBlog ? 'Edit Blog' : 'Create New Blog'}
+            </h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="block text-gray-700 dark:text-gray-300 mb-2">Title</label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 dark:bg-gray-900 dark:text-gray-100"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 dark:text-gray-300 mb-2">Content</label>
+                <textarea
+                  value={formData.content}
+                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 h-40 dark:bg-gray-900 dark:text-gray-100"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 dark:text-gray-300 mb-2">Tags (comma-separated)</label>
+                <input
+                  type="text"
+                  value={formData.tags}
+                  onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                  className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 dark:bg-gray-900 dark:text-gray-100"
+                  placeholder="tech, programming, web"
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setEditingBlog(null);
+                    setFormData({ title: '', content: '', tags: '' });
+                  }}
+                  className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+                >
+                  {editingBlog ? 'Update' : 'Create'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-export default MyBlogs; 
+export default MyBlogs;

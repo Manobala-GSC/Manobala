@@ -1,5 +1,21 @@
 import mongoose from 'mongoose';
 
+const commentSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 const blogSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -21,7 +37,14 @@ const blogSchema = new mongoose.Schema({
   },
   previewContent: {
     type: String,
-    required: true
+    required: function() {
+      // Only required if content exists
+      return !!this.content;
+    },
+    default: function() {
+      // Default to content with img tags removed if content exists
+      return this.content ? this.content.replace(/<img[^>]*>/g, '') : '';
+    }
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,6 +54,11 @@ const blogSchema = new mongoose.Schema({
   tags: [{
     type: String
   }],
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  comments: [commentSchema],
   createdAt: {
     type: Date,
     default: Date.now
