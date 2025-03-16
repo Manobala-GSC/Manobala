@@ -164,37 +164,32 @@ const ChatBot = () => {
     }
   };
 
-  if (!isLoggedin) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
-        <div className="text-xl font-semibold">Please login to use the chatbot</div>
-      </div>
-    )
-  }
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
-      <Sidebar
-        conversations={conversations}
-        activeConversation={activeConversation}
-        onConversationClick={loadConversation}
-        onNewChat={createNewChat}
-        onDeleteConversation={deleteConversation}
-      />
-      <div className="flex flex-col flex-grow">
-        <div className="flex-grow overflow-auto p-6 pb-0 space-y-4">
-          {messages.map((msg, index) => (
-            <Message key={index} sender={msg.sender} text={msg.text} />
-          ))}
-          {loading && (
-            <div className="flex items-center space-x-2 text-gray-400">
-              <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse delay-75"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse delay-150"></div>
-            </div>
-          )}
+    <div className="pt-15 sm:pt-16">
+      <div className="flex h-screen bg-gray-900 text-white">
+        <Sidebar
+          conversations={conversations}
+          activeConversation={activeConversation}
+          onConversationClick={loadConversation}
+          onNewChat={createNewChat}
+          onDeleteConversation={deleteConversation}
+        />
+        <div className="flex flex-col flex-grow">
+          <div className="flex-grow overflow-auto p-6 pb-0 space-y-4">
+            {messages.map((msg, index) => (
+              <Message key={index} sender={msg.sender} text={msg.text} />
+            ))}
+            {loading && (
+              <div className="flex items-center space-x-2 text-gray-400">
+                <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse"></div>
+                <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse delay-75"></div>
+                <div className="w-2 h-2 rounded-full bg-gray-400 animate-pulse delay-150"></div>
+              </div>
+            )}
+          </div>
+          <MessageInput sendMessage={sendMessage} />
         </div>
-        <MessageInput sendMessage={sendMessage} />
       </div>
     </div>
   );

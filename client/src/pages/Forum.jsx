@@ -77,8 +77,7 @@ function Forum() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
-      <Navbar />
+    <div className="pt-100 sm:pt-0">
       <div className="container mx-auto px-4 py-8 mt-16">
         <div className="flex h-[calc(100vh-8rem)]">
           <div className="w-64 flex-shrink-0 bg-gray-800 rounded-l-lg overflow-hidden">
