@@ -17,11 +17,11 @@ export const getAllUsers = async (req, res) => {
 export const updateUser = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { name, email, role, isAccountVerified } = req.body;
+        const { name, email, role, isAccountVerified, isExpert } = req.body;
         
         const user = await User.findByIdAndUpdate(
             userId,
-            { name, email, role, isAccountVerified },
+            { name, email, role, isAccountVerified, isExpert },
             { new: true }
         ).select('-password');
         

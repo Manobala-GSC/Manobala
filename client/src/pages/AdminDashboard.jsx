@@ -73,6 +73,28 @@ function AdminDashboard() {
         }
     };
 
+    const handleToggleExpert = async (userId) => {
+        try {
+            const userToUpdate = users.find(user => user._id === userId);
+            const { data } = await axios.patch(`${backendUrl}/api/admin/users/${userId}`, {
+                isExpert: !userToUpdate.isExpert
+            }, {
+                withCredentials: true
+            });
+            
+            if (data.success) {
+                setUsers(users.map(user => 
+                    user._id === userId 
+                        ? { ...user, isExpert: !user.isExpert }
+                        : user
+                ));
+                toast.success(`User ${!userToUpdate.isExpert ? 'is now an expert' : 'is no longer an expert'}`);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Error updating expert status');
+        }
+    };
+
     const handleDeleteBlog = async (blogId) => {
         if (!window.confirm('Are you sure you want to delete this blog?')) return;
         
@@ -136,6 +158,7 @@ function AdminDashboard() {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verified</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expert</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -150,6 +173,18 @@ function AdminDashboard() {
                                             <span className="text-green-600">Yes</span> : 
                                             <span className="text-red-600">No</span>
                                         }
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <button
+                                            onClick={() => handleToggleExpert(user._id)}
+                                            className={`px-3 py-1 rounded ${
+                                                user.isExpert 
+                                                    ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                                                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                            }`}
+                                        >
+                                            {user.isExpert ? 'Expert' : 'Make Expert'}
+                                        </button>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <button
@@ -185,8 +220,8 @@ function AdminDashboard() {
                                             <div className="text-sm font-medium text-gray-900">{blog.title}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{blog.author.name}</div>
-                                            <div className="text-sm text-gray-500">{blog.author.email}</div>
+                                            <div className="text-sm text-gray-900">{blog.author?.name || 'Unknown Author'}</div>
+                                            <div className="text-sm text-gray-500">{blog.author?.email || 'No email'}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-900">

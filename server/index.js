@@ -12,6 +12,7 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import forumRouter from './routes/forumRoutes.js';
 import adminRouter from './routes/adminRoutes.js';
+import expertChatRouter from './routes/expertChatRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -24,7 +25,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
     origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
@@ -42,34 +43,76 @@ app.use('/api/chat', chatRouter)
 app.use('/api/conversations', conversationRouter)
 app.use('/api/blogs', blogRouter);
 app.use('/api/admin', adminRouter)
+app.use('/api/expert-chat', expertChatRouter)
 
+// Create HTTP server first
 const httpServer = createServer(app);
+
+// Initialize Socket.IO with proper configuration
 const io = new Server(httpServer, {
-  cors: {
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
-    credentials: true
-  }
+    cors: {
+        origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+        credentials: true
+    },
+    path: '/socket.io/',
+    serveClient: false,
+    pingInterval: 10000,
+    pingTimeout: 5000,
+    cookie: false,
+    transports: ['polling', 'websocket']
 });
 
-// Set io instance in app for use in controllers
+// Store socket instance in app for use in routes
 app.set('io', io);
+
+// Socket.IO connection handling
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+
+    socket.on('joinExpertChat', (chatId) => {
+        const roomId = `expert-chat-${chatId}`;
+        socket.join(roomId);
+        console.log(`Socket ${socket.id} joined expert chat room: ${roomId}`);
+        socket.emit('joinedRoom', { room: roomId });
+    });
+
+    socket.on('leaveExpertChat', (chatId) => {
+        const roomId = `expert-chat-${chatId}`;
+        socket.leave(roomId);
+        console.log(`Socket ${socket.id} left expert chat room: ${roomId}`);
+    });
+
+    socket.on('joinRoom', (roomId) => {
+        if (!roomId.startsWith('expert-chat-')) {
+            socket.join(roomId);
+            console.log(`Socket ${socket.id} joined forum room: ${roomId}`);
+        }
+    });
+
+    socket.on('leaveRoom', (roomId) => {
+        if (!roomId.startsWith('expert-chat-')) {
+            socket.leave(roomId);
+            console.log(`Socket ${socket.id} left forum room: ${roomId}`);
+        }
+    });
+
+    socket.on('error', (error) => {
+        console.error('Socket error:', error);
+    });
+
+    socket.on('disconnect', (reason) => {
+        console.log('User disconnected:', socket.id, 'Reason:', reason);
+    });
+});
 
 // Add forum routes
 app.use('/api/forum', forumRouter);
 
-// Socket.IO connection handling
-io.on('connection', (socket) => {
-  socket.on('joinRoom', (roomId) => {
-    socket.join(roomId);
-  });
-  
-  socket.on('leaveRoom', (roomId) => {
-    socket.leave(roomId);
-  });
-});
-
+// Start the server
 httpServer.listen(port, () => {
-  console.log(`App is listening ${port}`);
+    console.log(`Server running on port ${port}`);
+    console.log('Socket.IO server initialized');
 });
 
 

@@ -177,7 +177,8 @@ export const isAuthenticated = async (req, res) => {
                 _id: user._id.toString(),
                 name: user.name,
                 email: user.email,
-                isAccountVerified: user.isAccountVerified
+                isAccountVerified: user.isAccountVerified,
+                isExpert: user.isExpert
             }
         });
     } catch (error) {

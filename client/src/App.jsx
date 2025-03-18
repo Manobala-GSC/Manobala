@@ -16,6 +16,7 @@ import BlogView from './pages/BlogView';
 import Forum from './pages/Forum';
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from './components/AdminRoute';
+import ExpertChat from './pages/ExpertChat';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
         <Route path="/blog/edit/:blogId" element={<BlogEditor />} />
         <Route path="/blog/:blogId" element={<BlogView />} />
         <Route path="/forum" element={<Forum />} />
+        <Route path="/expert-chat" element={<ExpertChat />} />
         <Route 
           path="/admin" 
           element={

@@ -64,6 +64,14 @@ function Navbar({ stayOnPage = false }) {
                 navigate('/chatbot');
               }
             }} className="text-gray-800 hover:text-gray-600">Chatbot</button>
+            <button onClick={() => {
+              if (!userData) {
+                toast.info('Please login to access expert chat');
+                navigate('/login');
+              } else {
+                navigate('/expert-chat');
+              }
+            }} className="text-gray-800 hover:text-gray-600">Expert Chat</button>
             {userData && userData.email === 'gscteam12345@gmail.com' && (
                 <button 
                     onClick={() => navigate('/admin')} 
