@@ -1,61 +1,109 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from "../components/Navbar"
+import { Users, BookOpen, Shield, Heart } from "lucide-react"
 
 function About() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-primary-lighter/20 to-white">
       <Navbar />
-      <div className="container mx-auto px-4 py-8 mt-16">
+      <div className="container mx-auto px-4 py-12 mt-16">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold mb-8 text-gray-800">About Us</h1>
-          
+          <h1 className="text-4xl font-bold mb-8 text-primary">About Us</h1>
+
           {/* Mission Statement */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Our Mission</h2>
+          <section className="mb-12 bg-white p-8 rounded-xl shadow-md border border-gray-100">
+            <h2 className="text-2xl font-semibold mb-4 text-primary-light">Our Mission</h2>
             <p className="text-gray-600 leading-relaxed">
-              We are dedicated to creating a safer world by raising awareness and providing support 
-              for those affected by child abuse, domestic women abuse, and workplace harassment. 
-              Our platform serves as a comprehensive resource hub, combining education, community support, 
-              and immediate assistance for those in need.
+              We are dedicated to creating a safer world by raising awareness and providing support for those affected
+              by child abuse, domestic women abuse, and workplace harassment. Our platform serves as a comprehensive
+              resource hub, combining education, community support, and immediate assistance for those in need.
             </p>
           </section>
 
           {/* Key Features */}
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-700">What We Offer</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-primary-light">What We Offer</h2>
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-xl font-semibold mb-2 text-gray-700">Educational Resources</h3>
-                <p className="text-gray-600">Comprehensive guides and materials for understanding and preventing abuse.</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-xl font-semibold mb-2 text-gray-700">Community Support</h3>
-                <p className="text-gray-600">A safe space for sharing experiences and finding support through our moderated forums.</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-xl font-semibold mb-2 text-gray-700">24/7 Assistance</h3>
-                <p className="text-gray-600">Immediate support through our AI-powered chatbot and emergency contact information.</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-xl font-semibold mb-2 text-gray-700">Expert Guidance</h3>
-                <p className="text-gray-600">Access to professional resources and verified information from field experts.</p>
+              <FeatureCard
+                icon={<BookOpen className="h-6 w-6" />}
+                title="Educational Resources"
+                description="Comprehensive guides and materials for understanding and preventing abuse."
+              />
+              <FeatureCard
+                icon={<Users className="h-6 w-6" />}
+                title="Community Support"
+                description="A safe space for sharing experiences and finding support through our moderated forums."
+              />
+              <FeatureCard
+                icon={<Shield className="h-6 w-6" />}
+                title="24/7 Assistance"
+                description="Immediate support through our AI-powered chatbot and emergency contact information."
+              />
+              <FeatureCard
+                icon={<Heart className="h-6 w-6" />}
+                title="Expert Guidance"
+                description="Access to professional resources and verified information from field experts."
+              />
+            </div>
+          </section>
+
+          {/* Team Section */}
+          <section className="mb-12">
+            <h2 className="text-2xl font-semibold mb-6 text-primary-light">Our Team</h2>
+            <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100">
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Our team consists of mental health professionals, advocates, educators, and technology experts committed
+                to creating a supportive and informative platform. We work together to ensure that our resources are
+                accurate, accessible, and helpful for those who need them.
+              </p>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+                <TeamMember name="Dr. Sarah Johnson" role="Clinical Psychologist" />
+                <TeamMember name="Michael Chen" role="Community Manager" />
+                <TeamMember name="Aisha Patel" role="Content Director" />
+                <TeamMember name="Robert Garcia" role="Technology Lead" />
               </div>
             </div>
           </section>
 
           {/* Privacy Commitment */}
-          <section className="bg-white p-8 rounded-lg shadow mb-12">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Our Commitment to Privacy</h2>
+          <section className="bg-white p-8 rounded-xl shadow-md border border-gray-100 mb-12">
+            <h2 className="text-2xl font-semibold mb-4 text-primary-light">Our Commitment to Privacy</h2>
             <p className="text-gray-600 leading-relaxed">
-              We prioritize user privacy and data protection, ensuring compliance with GDPR and other 
-              relevant data protection laws. All interactions on our platform are encrypted and handled 
-              with the utmost confidentiality.
+              We prioritize user privacy and data protection, ensuring compliance with GDPR and other relevant data
+              protection laws. All interactions on our platform are encrypted and handled with the utmost
+              confidentiality. We believe that privacy is essential for creating a safe environment where users can seek
+              help and support without fear.
             </p>
           </section>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default About; 
+function FeatureCard({ icon, title, description }) {
+  return (
+    <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+      <div className="flex items-center mb-4">
+        <div className="p-3 bg-primary-lighter/20 rounded-full text-primary mr-4">{icon}</div>
+        <h3 className="text-xl font-semibold text-primary">{title}</h3>
+      </div>
+      <p className="text-gray-600">{description}</p>
+    </div>
+  )
+}
+
+function TeamMember({ name, role }) {
+  return (
+    <div className="text-center">
+      <div className="w-16 h-16 md:w-20 md:h-20 bg-primary-lighter/30 rounded-full mx-auto mb-3 flex items-center justify-center text-primary font-bold text-xl">
+        {name.charAt(0)}
+      </div>
+      <h4 className="font-medium text-primary">{name}</h4>
+      <p className="text-sm text-gray-500">{role}</p>
+    </div>
+  )
+}
+
+export default About
+

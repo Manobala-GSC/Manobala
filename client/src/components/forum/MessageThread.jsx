@@ -67,8 +67,10 @@ function MessageThread({ room, socket, backendUrl }) {
   }
 
   const isCurrentUser = (userId) => {
-    return userId === userData._id
-  }
+    console.log(userId?.name);
+    console.log(userData?.name)
+    return userId?.name !== userData?.name
+  }
 
   const renderMessageContent = (message) => {
     if (message.deleted) {
@@ -150,10 +152,10 @@ function MessageThread({ room, socket, backendUrl }) {
                   </div>
                 </div>
               )}
-              <div className={`flex ${isCurrentUser(message.userId) ? "justify-end" : "justify-start"}`}>
+              <div className={`mb-4 flex ${!isCurrentUser(message.userId) ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`max-w-[85%] rounded-lg px-3 py-2 ${
-                    isCurrentUser(message.userId) ? "bg-emerald-900/40 text-gray-100" : "bg-[#1F1F1F] text-gray-100"
+                    !isCurrentUser(message.userId) ? "bg-emerald-900/40 text-gray-100" : "bg-[#1F1F1F] text-gray-100"
                   }`}
                 >
                   {!isCurrentUser(message.userId) && (
@@ -162,7 +164,7 @@ function MessageThread({ room, socket, backendUrl }) {
                   {renderMessageContent(message)}
                   <div className="flex items-center justify-end gap-1 mt-1">
                     <span className="text-xs text-gray-400">{format(new Date(message.timestamp), "HH:mm")}</span>
-                    {isCurrentUser(message.userId) && <Check className="w-3 h-3 text-emerald-400" />}
+                    {!isCurrentUser(message.userId) && <Check className="w-3 h-3 text-emerald-400" />}
                   </div>
                 </div>
               </div>
