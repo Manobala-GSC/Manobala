@@ -5,9 +5,13 @@ import { useNavigate } from "react-router-dom"
 import { ArrowRight, MessageCircle, BookOpen, Heart, Users, Shield, Brain, ChevronRight } from "lucide-react"
 import img1 from "../assets/img1.png"
 
-
 export default function Home() {
   const navigate = useNavigate()
+
+  const handleNavigation = (path) => {
+    console.log('Navigating to:', path)
+    navigate(path)
+  }
 
   // Animation variants
   const fadeIn = {
@@ -26,9 +30,6 @@ export default function Home() {
   }
 
   return (
-    
-
-    
     <div className="flex flex-col min-h-screen pattern-bg">
       {/* Hero Section */}
       <section className="relative py-20 md:py-28 px-4 overflow-hidden">
@@ -54,7 +55,7 @@ export default function Home() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => navigate("/forum")}
+                  onClick={() => handleNavigation('/forum')}
                   className="btn-primary"
                 >
                   Join Our Community
@@ -62,11 +63,17 @@ export default function Home() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => navigate("/chatbot")}
+                  onClick={() => handleNavigation('/chatbot')}
                   className="btn-secondary"
                 >
                   Talk to an Expert
                 </motion.button>
+                <button
+                  onClick={() => handleNavigation('/about')}
+                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  Test Navigation
+                </button>
               </div>
 
               <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
@@ -150,38 +157,38 @@ export default function Home() {
               icon={<Users className="h-8 w-8" />}
               title="Community Forum"
               description="Connect with others, share experiences, and find support in our moderated community spaces."
-              onClick={() => navigate("/forum")}
+              onClick={() => handleNavigation("/forum")}
             />
             <FeatureCard
               icon={<MessageCircle className="h-8 w-8" />}
               title="1-on-1 Expert Chat"
               description="Schedule private sessions with licensed mental health professionals for personalized support."
-              onClick={() => navigate("/chatbot")}
+              onClick={() => handleNavigation("/chatbot")}
               featured={true}
             />
             <FeatureCard
               icon={<Brain className="h-8 w-8" />}
               title="AI Chatbot"
               description="Get immediate responses to your questions and concerns from our supportive AI assistant."
-              onClick={() => navigate("/chatbot")}
+              onClick={() => handleNavigation("/chatbot")}
             />
             <FeatureCard
               icon={<BookOpen className="h-8 w-8" />}
               title="Resources Library"
               description="Access a curated collection of articles, videos, and tools to support your mental wellbeing."
-              onClick={() => navigate("/resources")}
+              onClick={() => handleNavigation("/resources")}
             />
             <FeatureCard
               icon={<Shield className="h-8 w-8" />}
               title="Educational Blog"
               description="Stay informed with the latest research, tips, and stories from mental health experts."
-              onClick={() => navigate("/blogs")}
+              onClick={() => handleNavigation("/blogs")}
             />
             <FeatureCard
               icon={<Heart className="h-8 w-8" />}
               title="Self-Care Tools"
               description="Discover practical exercises and techniques to incorporate into your daily routine."
-              onClick={() => navigate("/resources")}
+              onClick={() => handleNavigation("/resources")}
             />
           </motion.div>
         </div>
@@ -265,7 +272,7 @@ export default function Home() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/login")}
+              onClick={() => handleNavigation("/login")}
               className="bg-white text-primary hover:bg-gray-100 font-medium rounded-xl px-8 py-4 transition-colors shadow-xl flex items-center gap-2 mx-auto"
             >
               <span>Create Your Free Account</span>
@@ -308,7 +315,7 @@ export default function Home() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault()
-                      navigate("/forum")
+                      handleNavigation("/forum")
                     }}
                     className="text-white/80 hover:text-white transition-colors"
                   >
@@ -320,7 +327,7 @@ export default function Home() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault()
-                      navigate("/chatbot")
+                      handleNavigation("/chatbot")
                     }}
                     className="text-white/80 hover:text-white transition-colors"
                   >
@@ -332,7 +339,7 @@ export default function Home() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault()
-                      navigate("/resources")
+                      handleNavigation("/resources")
                     }}
                     className="text-white/80 hover:text-white transition-colors"
                   >
@@ -344,7 +351,7 @@ export default function Home() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault()
-                      navigate("/blogs")
+                      handleNavigation("/blogs")
                     }}
                     className="text-white/80 hover:text-white transition-colors"
                   >
@@ -361,7 +368,7 @@ export default function Home() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault()
-                      navigate("/about")
+                      handleNavigation("/about")
                     }}
                     className="text-white/80 hover:text-white transition-colors"
                   >
@@ -373,7 +380,7 @@ export default function Home() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault()
-                      navigate("/about")
+                      handleNavigation("/about")
                     }}
                     className="text-white/80 hover:text-white transition-colors"
                   >
@@ -385,7 +392,7 @@ export default function Home() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault()
-                      navigate("/contact")
+                      handleNavigation("/contact")
                     }}
                     className="text-white/80 hover:text-white transition-colors"
                   >

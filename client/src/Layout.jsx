@@ -8,7 +8,7 @@ function Layout() {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main>
+      <main className="pt-24">
         <Outlet />
       </main>
       <ToastContainer position="bottom-right" />

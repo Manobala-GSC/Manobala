@@ -6,13 +6,18 @@ import { AppContent } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-
 function Navbar({ stayOnPage = false }) {
-  const navigate=useNavigate();
-  const {userData,backendUrl,setUserData,setIsLoggedin}=useContext(AppContent);
-  const logout=async()=>{
+  const navigate = useNavigate();
+  const {userData,backendUrl,setUserData,setIsLoggedin} = useContext(AppContent);
+
+  const handleNavigation = (path) => {
+    console.log('Navbar navigation clicked:', path);
+    navigate(path);
+  };
+
+  const logout = async() => {
     try{
-      const {data}=await axios.post(`${backendUrl}/api/auth/logout`, {}, {
+      const {data} = await axios.post(`${backendUrl}/api/auth/logout`, {}, {
         withCredentials: true
       });
       if(data.success){
@@ -28,10 +33,10 @@ function Navbar({ stayOnPage = false }) {
     }
   }
 
-  const sendverificationotp=async(req,res)=>{
+  const sendverificationotp = async() => {
     try{
       axios.defaults.withCredentials = true;
-      const {data}=await axios.post(`${backendUrl}/api/auth/sendOtp`);
+      const {data} = await axios.post(`${backendUrl}/api/auth/sendOtp`);
       if(data.success){
         navigate('/emailVerify')
         toast.success(data.message);
@@ -39,42 +44,47 @@ function Navbar({ stayOnPage = false }) {
       else{
         toast.error(data.message)
       }
-
-
     }catch(error){
       toast.error(error.response.data.message)
     }
   }
+
   return (
-    <div className='w-full flex justify-between items-center p-4 sm:p-6 sm:px-24 absolute top-0'>
+    <nav className='w-full flex justify-between items-center p-4 sm:p-6 sm:px-24 bg-white/80 backdrop-blur-sm fixed top-0 z-50'>
         <div className="flex items-center gap-6">
-            <a href="/" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
-                <img src={assets.logo} className='w-28 sm:32'/>
+            <a href="/" onClick={(e) => { 
+              e.preventDefault(); 
+              console.log('Home link clicked');
+              handleNavigation('/'); 
+            }}>
+                <img src={assets.logo} className='w-28 sm:32' alt="Logo"/>
             </a>
-            <button onClick={() => navigate('/blogs')} className="text-gray-800 hover:text-gray-600">Blogs</button>
-            <button onClick={() => navigate('/about')} className="text-gray-800 hover:text-gray-600">About</button>
-            <button onClick={() => navigate('/resources')} className="text-gray-800 hover:text-gray-600">Resources</button>
-            <button onClick={() => navigate('/forum')} className="text-gray-800 hover:text-gray-600">Forum</button>
-            <button onClick={() => navigate('/contact')} className="text-gray-800 hover:text-gray-600">Contact</button>
+            <button onClick={() => handleNavigation('/blogs')} className="text-gray-800 hover:text-gray-600">Blogs</button>
+            <button onClick={() => handleNavigation('/about')} className="text-gray-800 hover:text-gray-600">About</button>
+            <button onClick={() => handleNavigation('/resources')} className="text-gray-800 hover:text-gray-600">Resources</button>
+            <button onClick={() => handleNavigation('/forum')} className="text-gray-800 hover:text-gray-600">Forum</button>
+            <button onClick={() => handleNavigation('/contact')} className="text-gray-800 hover:text-gray-600">Contact</button>
             <button onClick={() => {
+              console.log('Chatbot clicked');
               if (!userData) {
                 toast.info('Please login to use the chatbot');
-                navigate('/login');
+                handleNavigation('/login');
               } else {
-                navigate('/chatbot');
+                handleNavigation('/chatbot');
               }
             }} className="text-gray-800 hover:text-gray-600">Chatbot</button>
             <button onClick={() => {
+              console.log('Expert chat clicked');
               if (!userData) {
                 toast.info('Please login to access expert chat');
-                navigate('/login');
+                handleNavigation('/login');
               } else {
-                navigate('/expert-chat');
+                handleNavigation('/expert-chat');
               }
             }} className="text-gray-800 hover:text-gray-600">Expert Chat</button>
             {userData && userData.email === 'gscteam12345@gmail.com' && (
                 <button 
-                    onClick={() => navigate('/admin')} 
+                    onClick={() => handleNavigation('/admin')} 
                     className="text-gray-800 hover:text-gray-600"
                 >
                     Admin Dashboard
@@ -87,14 +97,14 @@ function Navbar({ stayOnPage = false }) {
             group-hover:block top-0 right-0 z-10 text-black rounded pt-10'>
               <ul className="list-none m-0 p-2 bg-gray-100 text-sm">
                 {!userData.isAccountVerified && <li onClick={sendverificationotp} className="py-1 px-2 hover:bg-gray-200 cursor-pointer">Verify Email</li>}
-                <li onClick={() => navigate('/my-blogs')} className="py-1 px-2 hover:bg-gray-200 cursor-pointer">My Blogs</li>
+                <li onClick={() => handleNavigation('/my-blogs')} className="py-1 px-2 hover:bg-gray-200 cursor-pointer">My Blogs</li>
                 <li onClick={logout} className="py-1 px-2 hover:bg-gray-200 cursor-pointer pr-10">Logout</li>
               </ul>
           </div>
         </div>
         :
-        <button onClick={()=>navigate('/login')} className="flex items-center gap-2 border border-gray-500 rounded-full px-6 py-2 text-gray-800 hover:bg-gray-100 transition-all">Login <img src={assets.arrow_icon}/></button>}
-    </div>
+        <button onClick={()=>handleNavigation('/login')} className="flex items-center gap-2 border border-gray-500 rounded-full px-6 py-2 text-gray-800 hover:bg-gray-100 transition-all">Login <img src={assets.arrow_icon}/></button>}
+    </nav>
   )
 }
 
