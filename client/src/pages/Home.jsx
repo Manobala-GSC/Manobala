@@ -4,9 +4,12 @@ import { motion } from "framer-motion"
 import { useNavigate } from "react-router-dom"
 import { ArrowRight, MessageCircle, BookOpen, Heart, Users, Shield, Brain, ChevronRight } from "lucide-react"
 import img1 from "../assets/img1.png"
+import { useContext } from "react"
+import { AppContent } from "../context/AppContext"
 
 export default function Home() {
   const navigate = useNavigate()
+  const { userData, isLoggedin } = useContext(AppContent)
 
   const handleNavigation = (path) => {
     console.log('Navigating to:', path)
@@ -263,15 +266,17 @@ export default function Home() {
             <p className="text-white/90 text-lg max-w-2xl mx-auto mb-8">
               Join thousands of others who are taking positive steps toward better mental wellbeing.
             </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleNavigation("/login")}
-              className="bg-white text-primary hover:bg-gray-100 font-medium rounded-xl px-8 py-4 transition-colors shadow-xl flex items-center gap-2 mx-auto"
-            >
-              <span>Create Your Free Account</span>
-              <ArrowRight className="h-4 w-4" />
-            </motion.button>
+            {!isLoggedin && (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleNavigation("/login")}
+                className="bg-white text-primary hover:bg-gray-100 font-medium rounded-xl px-8 py-4 transition-colors shadow-xl flex items-center gap-2 mx-auto"
+              >
+                <span>Create Your Free Account</span>
+                <ArrowRight className="h-4 w-4" />
+              </motion.button>
+            )}
 
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl">
