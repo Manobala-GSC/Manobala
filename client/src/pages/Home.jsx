@@ -68,12 +68,6 @@ export default function Home() {
                 >
                   Talk to an Expert
                 </motion.button>
-                <button
-                  onClick={() => handleNavigation('/about')}
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  Test Navigation
-                </button>
               </div>
 
               <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
