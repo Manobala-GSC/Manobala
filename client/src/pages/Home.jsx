@@ -12,7 +12,7 @@ export default function Home() {
   const { userData, isLoggedin } = useContext(AppContent)
 
   const handleNavigation = (path) => {
-    console.log('Navigating to:', path)
+    console.log("Navigating to:", path)
     navigate(path)
   }
 
@@ -41,9 +41,35 @@ export default function Home() {
         <div className="container mx-auto relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <motion.div initial="hidden" animate="visible" variants={fadeIn} className="flex flex-col space-y-6">
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary-lighter/20 text-primary text-sm font-medium mb-2">
-                <span className="animate-pulse mr-2">●</span> Mental Health Support Platform
+              <div className="flex flex-col space-y-3 mb-5">
+                <div className="inline-flex items-center px-5 py-2 rounded-full bg-primary-lighter/20 text-primary text-lg font-semibold">
+                  <span className="animate-pulse mr-3 text-xl">●</span> Mental Health Support Platform
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl shadow-soft border border-card-border">
+                    <Brain className="h-5 w-5 text-primary" />
+                    <span className="font-medium text-sm">24/7 Support</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl shadow-soft border border-card-border">
+                    <Shield className="h-5 w-5 text-primary" />
+                    <span className="font-medium text-sm">100% Confidential</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl shadow-soft border border-card-border">
+                    <Users className="h-5 w-5 text-primary" />
+                    <span className="font-medium text-sm">10,000+ Active Users</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-primary-lighter/30 to-primary-lighter/10 rounded-xl border border-primary-lighter/30 shadow-soft">
+                  <div className="p-2 bg-white rounded-lg shadow-sm">
+                    <Heart className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-primary">Mental Health Awareness Month</p>
+                    <p className="text-sm text-gray-600">Join our special events and workshops this month</p>
+                  </div>
+                </div>
               </div>
+
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 Your Journey to{" "}
                 <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light">
@@ -58,7 +84,7 @@ export default function Home() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => handleNavigation('/forum')}
+                  onClick={() => handleNavigation("/forum")}
                   className="btn-primary"
                 >
                   Join Our Community
@@ -66,7 +92,7 @@ export default function Home() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => handleNavigation('/chatbot')}
+                  onClick={() => handleNavigation("/chatbot")}
                   className="btn-secondary"
                 >
                   Talk to an Expert
@@ -468,7 +494,6 @@ export default function Home() {
         </div>
       </footer>
     </div>
-    
   )
 }
 

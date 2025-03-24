@@ -1,11 +1,15 @@
-// Message.jsx
-import React from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown from "react-markdown"
 
 const Message = ({ sender, text }) => {
   return (
-    <div className={`flex ${sender === "user" ? "justify-end" : "justify-start"}`}>
-      <div className={`max-w-3xl rounded-lg p-4 ${sender === "user" ? "bg-blue-600" : "bg-gray-700"}`}>
+    <div className={`flex ${sender === "user" ? "justify-end" : "justify-start"} mb-4`}>
+      <div
+        className={`max-w-3xl rounded-2xl p-4 shadow-soft ${
+          sender === "user"
+            ? "bg-gradient-to-r from-primary to-primary-light text-white"
+            : "bg-white dark:bg-gray-800 border border-card-border"
+        }`}
+      >
         <ReactMarkdown
           children={text}
           components={{
@@ -16,13 +20,26 @@ const Message = ({ sender, text }) => {
             ul: ({ children }) => <ul className="list-disc list-inside mb-2">{children}</ul>,
             ol: ({ children }) => <ol className="list-decimal list-inside mb-2">{children}</ol>,
             li: ({ children }) => <li className="mb-1">{children}</li>,
-            code: ({ children }) => <code className="bg-gray-800 rounded px-1">{children}</code>,
-            pre: ({ children }) => <pre className="bg-gray-800 rounded p-2 mb-2 overflow-x-auto">{children}</pre>,
+            code: ({ children }) => (
+              <code
+                className={`rounded px-1 ${sender === "user" ? "bg-primary-dark" : "bg-gray-100 dark:bg-gray-700"}`}
+              >
+                {children}
+              </code>
+            ),
+            pre: ({ children }) => (
+              <pre
+                className={`rounded p-2 mb-2 overflow-x-auto ${sender === "user" ? "bg-primary-dark" : "bg-gray-100 dark:bg-gray-700"}`}
+              >
+                {children}
+              </pre>
+            ),
           }}
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Message;
+export default Message
+

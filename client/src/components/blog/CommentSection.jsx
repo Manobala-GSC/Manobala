@@ -76,9 +76,9 @@ const CommentSection = ({ blogId }) => {
   
   return (
     <div className="mt-12">
-      <div className="h-px w-full bg-gray-200 dark:bg-gray-800 my-8" />
+      <div className="h-px w-full bg-gradient-to-r from-primary-lighter/30 via-primary-lighter to-primary-lighter/30 my-8" />
       
-      <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+      <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gradient">
         <MessageSquare className="w-6 h-6" />
         Discussions ({comments.length})
       </h2>
@@ -87,7 +87,7 @@ const CommentSection = ({ blogId }) => {
       <form onSubmit={handleSubmit} className="mb-8">
         <div className="flex gap-4">
           {userData ? (
-            <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-300 font-medium shrink-0">
+            <div className="h-10 w-10 rounded-full bg-primary-lighter/20 flex items-center justify-center text-primary font-medium shrink-0">
               {getInitials(userData?.name)}
             </div>
           ) : (
@@ -101,7 +101,7 @@ const CommentSection = ({ blogId }) => {
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder={userData ? "Write a comment..." : "Please log in to comment"}
-              className="w-full min-h-[100px] px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-gray-800 dark:text-gray-100 resize-none"
+              className="w-full min-h-[100px] px-4 py-3 border border-primary-lighter/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-light focus:border-primary-light dark:bg-gray-800 dark:text-gray-100 resize-none"
               rows="3"
               disabled={!userData || submitting}
             ></textarea>
@@ -110,7 +110,7 @@ const CommentSection = ({ blogId }) => {
               <button
                 type="submit"
                 disabled={!userData || submitting || !newComment.trim()}
-                className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:hover:bg-emerald-600 flex items-center gap-2"
+                className="bg-gradient-to-r from-primary to-primary-light text-white px-4 py-2 rounded-xl hover:shadow-button transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
               >
                 {submitting ? (
                   <>
@@ -139,12 +139,12 @@ const CommentSection = ({ blogId }) => {
           <div className="animate-pulse space-y-6">
             {[1, 2, 3].map(n => (
               <div key={n} className="flex gap-4">
-                <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0"></div>
+                <div className="h-10 w-10 rounded-full bg-primary-lighter/20 shrink-0"></div>
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/5"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+                  <div className="h-4 bg-primary-lighter/20 rounded-xl w-1/4"></div>
+                  <div className="h-3 bg-primary-lighter/10 rounded-xl w-1/5"></div>
+                  <div className="h-4 bg-primary-lighter/10 rounded-xl w-full"></div>
+                  <div className="h-4 bg-primary-lighter/10 rounded-xl w-5/6"></div>
                 </div>
               </div>
             ))}
@@ -152,7 +152,7 @@ const CommentSection = ({ blogId }) => {
         ) : comments.length > 0 ? (
           comments.map(comment => (
             <div key={comment._id} className="flex gap-4 group">
-              <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-300 font-medium shrink-0 mt-0.5">
+              <div className="h-10 w-10 rounded-full bg-primary-lighter/20 flex items-center justify-center text-primary font-medium shrink-0 mt-0.5">
                 {getInitials(comment.user?.name || 'Anonymous')}
               </div>
               
@@ -168,9 +168,9 @@ const CommentSection = ({ blogId }) => {
                   {userData && (userData._id === comment.user?._id || userData._id === comment.user) && (
                     <button
                       onClick={() => handleDelete(comment._id)}
-                      className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="text-gray-400 hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-4 w-4" />
                     </button>
                   )}
                 </div>
@@ -180,8 +180,8 @@ const CommentSection = ({ blogId }) => {
             </div>
           ))
         ) : (
-          <div className="text-center py-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700">
-            <p className="text-gray-500 dark:text-gray-400">No comments yet. Be the first to join the discussion!</p>
+          <div className="text-center py-8 bg-primary-lighter/5 rounded-xl border border-primary-lighter/20">
+            <p className="text-gray-600 dark:text-gray-400">No comments yet. Be the first to join the discussion!</p>
           </div>
         )}
       </div>

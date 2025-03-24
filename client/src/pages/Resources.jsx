@@ -82,7 +82,13 @@ function Resources() {
   }, [])
 
   const handleDownload = (url, title) => {
-    // In a real application, you would handle the actual file download here
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", title);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  
     toast.success(`Downloading ${title}...`, {
       icon: "📥",
       style: {
@@ -90,20 +96,27 @@ function Resources() {
         background: "#4c1d95",
         color: "#fff",
       },
-    })
-  }
+    });
+  };
+  
 
   const handlePrint = (url, title) => {
-    // In a real application, you would handle the printing logic here
-    toast.success(`Preparing ${title} for printing...`, {
-      icon: "🖨️",
-      style: {
-        borderRadius: "10px",
-        background: "#4c1d95",
-        color: "#fff",
-      },
-    })
-  }
+    const newWindow = window.open(url, "_blank");
+    if (newWindow) {
+      newWindow.onload = () => {
+        newWindow.print();
+      };
+    } else {
+      toast.error("Popup blocked! Please allow popups and try again.", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#D32F2F",
+          color: "#fff",
+        },
+      });
+    }
+  };
 
   // Filter resources based on search term and active category
   const filteredResources = resources

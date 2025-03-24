@@ -7,79 +7,106 @@ import { toast } from 'react-toastify';
 
 function EmailVerify() {
   axios.defaults.withCredentials = true;
-  const navigate=useNavigate();
-  const{backendUrl,isLoggedin,userData,getUserData}=useContext(AppContent);
-  const inputRefs=useRef([]);
-  const handleInput=(e,index)=>{
-    if(e.target.value.length > 0 && index < inputRefs.current.length - 1){
+  const navigate = useNavigate();
+  const { backendUrl, isLoggedin, userData, getUserData } = useContext(AppContent);
+  const inputRefs = useRef([]);
+  
+  const handleInput = (e, index) => {
+    if(e.target.value.length > 0 && index < inputRefs.current.length - 1) {
       inputRefs.current[index+1].focus();
     }
   }
-  const handleKeyDown=(e,index)=>{
-    if(e.key==='Backspace' && e.target.value==='' && index>0){
+  
+  const handleKeyDown = (e, index) => {
+    if(e.key === 'Backspace' && e.target.value === '' && index > 0) {
       inputRefs.current[index-1].focus();
-
     }
   }
-  const handlePaste=(e)=>{
+  
+  const handlePaste = (e) => {
     e.preventDefault();
     
-  const paste = e.clipboardData.getData('text').split('');
-  paste.forEach((char, index) => {
-    if (inputRefs.current[index]){
-      inputRefs.current[index].value=char;
-    }
-  });
+    const paste = e.clipboardData.getData('text').split('');
+    paste.forEach((char, index) => {
+      if (inputRefs.current[index]) {
+        inputRefs.current[index].value = char;
+      }
+    });
   }
 
-  const onSubmithandler=async(e)=>{
-    try{
+  const onSubmithandler = async(e) => {
+    try {
       e.preventDefault();
-      const otpArray=inputRefs.current.map(e=>e.value)
-      const otp=otpArray.join('')
-      const {data}=await axios.post(`${backendUrl}/api/auth/verifyEmail`,{otp})
-      if(data.success){
+      const otpArray = inputRefs.current.map(e => e.value)
+      const otp = otpArray.join('')
+      const { data } = await axios.post(`${backendUrl}/api/auth/verifyEmail`, { otp })
+      if(data.success) {
         toast.success(data.message);
         getUserData();
         navigate('/');
-
-      }
-      else{
+      } else {
         toast.error(data.message)
       }
-
-    }
-    catch(error){
+    } catch(error) {
       toast.error(error.message)
-
     }
   }
-  useEffect(()=>{
+  
+  useEffect(() => {
     isLoggedin && userData && userData.isAccountVerified && navigate('/')
-  },[isLoggedin,userData])
+  }, [isLoggedin, userData, navigate])
+  
   return (
-    <div className="flex items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-blue-200 to-purple-400">
-      <img onClick={()=>navigate('/')}src={assets.logo} alt="" className="absolute left-5 sm:left-20 top-5 w-28 sm:w-32 cursor-pointer" />
-      <form onSubmit={onSubmithandler}className="bg-slate-900 p-8 rounded-lg shadow-lg w-96 text-sm ">
-        <h1 className="text-white text-2xl font-semibold text-center mb-4 ">
-          Email Verify OTP
-        </h1>
-        <p className="text-center mb-6 text-indigo-300">Enter the digit code sent to your email id.</p>
-        <div className="flex justify-between mb-8 space-x-2" onPaste={handlePaste}>
-          {Array(6).fill(0).map((_,index)=>(
-            <input type="text" maxLength='1' key={index} required
-            className="w-12 h-12 bg-[#333A5C] text-white text-center text-xl rounded-md " ref={(e)=>{
-              inputRefs.current[index]=e
-            }} onInput={(e)=>{handleInput(e,index)}} onKeyDown={(e)=>{handleKeyDown(e,index)}}/>
-            
-            
-          ))}
+    <div className="flex items-center justify-center min-h-screen pattern-bg">
+      <img 
+        onClick={() => navigate('/')}
+        src={assets.logo || "/placeholder.svg"} 
+        alt="Logo" 
+        className="absolute left-5 sm:left-20 top-5 w-28 sm:w-32 cursor-pointer" 
+      />
+      
+      <div className="relative w-full sm:w-96 max-w-md mx-4">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-light/20 to-primary-lighter/20 rounded-2xl blur-xl"></div>
+        <form 
+          onSubmit={onSubmithandler}
+          className="relative bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-soft border border-card-border"
+        >
+          <h1 className="text-3xl font-bold text-gradient text-center mb-4">
+            Email Verification
+          </h1>
           
-
-        </div>
-        <button className="w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-900 text-white rounded-full">Verify Email</button>
-      </form>
-
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
+            Enter the 6-digit code sent to your email
+          </p>
+          
+          <div 
+            className="flex justify-between mb-8 space-x-2" 
+            onPaste={handlePaste}
+          >
+            {Array(6).fill(0).map((_, index) => (
+              <input 
+                type="text" 
+                maxLength='1' 
+                key={index} 
+                required
+                className="w-12 h-12 bg-primary-lighter/10 text-primary text-center text-xl rounded-lg border border-primary-lighter focus:outline-none focus:ring-2 focus:ring-primary-light focus:border-primary-light transition-all" 
+                ref={(e) => {
+                  inputRefs.current[index] = e
+                }} 
+                onInput={(e) => {handleInput(e, index)}} 
+                onKeyDown={(e) => {handleKeyDown(e, index)}}
+              />
+            ))}
+          </div>
+          
+          <button 
+            type="submit"
+            className="w-full py-3 bg-gradient-to-r from-primary to-primary-light text-white rounded-xl shadow-button hover:shadow-lg transition-all duration-300 transform hover:scale-102"
+          >
+            Verify Email
+          </button>
+        </form>
+      </div>
     </div>
   )
 }

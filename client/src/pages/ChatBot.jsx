@@ -185,9 +185,9 @@ const ChatBot = () => {
   }
 
   return (
-    <div className="min-h-screen pattern-bg bg-[#F5F0FF]">
+    <div className="min-h-screen pattern-bg bg-[#F5F0FF] ">
       <Navbar />
-      <div className="container mx-auto px-4 py-8 mt-16">
+      <div className="container mx-auto px-4 py-8 pt-20">
         <div className="flex h-[calc(100vh-8rem)] bg-white/90 backdrop-blur-sm rounded-2xl shadow-card overflow-hidden border border-card-border">
           {/* Sidebar */}
           <div className="w-72 flex-shrink-0 bg-gradient-to-b from-primary to-primary-dark rounded-l-2xl overflow-hidden">

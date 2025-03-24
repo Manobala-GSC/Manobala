@@ -138,8 +138,8 @@ const LikeButton = ({
       className={`
         ${buttonSize} 
         ${isLiked 
-          ? 'bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400' 
-          : 'text-gray-600 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400'
+          ? 'bg-primary-lighter/20 text-primary dark:bg-primary-dark/20 dark:text-primary-lighter' 
+          : 'text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-lighter'
         }
         rounded-lg flex items-center gap-1.5 transition-all duration-200
         ${isLoading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}
@@ -148,7 +148,7 @@ const LikeButton = ({
       <Heart 
         className={`
           ${iconSize} 
-          ${isLiked ? 'fill-red-500' : 'fill-transparent'} 
+          ${isLiked ? 'fill-primary' : 'fill-transparent'} 
           transition-all duration-300
           ${isAnimating ? 'scale-125' : 'scale-100'}
         `} 

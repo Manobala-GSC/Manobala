@@ -45,17 +45,17 @@ const BlogCard = ({ blog, onLikeUpdate }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-card-border overflow-hidden h-full flex flex-col hover:shadow-card transition-all duration-300 transform hover:-translate-y-1">
       <div className="p-6 flex-1">
         {/* Title with link */}
         <Link to={`/blog/${blog._id}`} className="block group">
-          <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2">
+          <h3 className="text-xl font-semibold mb-3 text-primary group-hover:text-primary-dark transition-colors line-clamp-2">
             {blog.title}
           </h3>
         </Link>
         
         <div className="flex items-center gap-3 mb-4">
-          <div className="h-8 w-8 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-300 font-medium">
+          <div className="h-8 w-8 rounded-full bg-primary-lighter/20 flex items-center justify-center text-primary font-medium">
             {getInitials(blog.author?.name)}
           </div>
           
@@ -80,12 +80,12 @@ const BlogCard = ({ blog, onLikeUpdate }) => {
         </Link>
       </div>
       
-      <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex justify-between items-center">
+      <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex justify-between items-center">
         {/* Tags */}
         <div className="flex flex-wrap gap-1.5">
           {blog.tags && blog.tags.length > 0 && 
             blog.tags.slice(0, 2).map((tag, index) => (
-              <span key={index} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full text-xs">
+              <span key={index} className="bg-primary-lighter/10 text-primary px-2 py-1 rounded-full text-xs">
                 {tag}
               </span>
             ))

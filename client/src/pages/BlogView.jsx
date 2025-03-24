@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -10,7 +8,7 @@ import { AppContent } from "../context/AppContext"
 import LikeButton from "../components/blog/LikeButton"
 import Comments from "../components/blog/Comments"
 import BlogViewSkeleton from "../components/blog/BlogViewSkeleton"
-import { Calendar, Clock, Share2, BookmarkPlus, MoreHorizontal, Edit, Trash2 } from "lucide-react"
+import { Calendar, Clock, Share2, BookmarkPlus, MoreHorizontal, Edit, Trash2 } from 'lucide-react'
 
 function BlogView() {
   const { blogId } = useParams()
@@ -172,7 +170,7 @@ function BlogView() {
   // Show loading state while auth is being checked
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen pattern-bg">
         <Navbar />
         <div className="container mx-auto px-4 py-8 mt-16">
           <BlogViewSkeleton />
@@ -183,7 +181,7 @@ function BlogView() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen pattern-bg">
         <Navbar />
         <div className="container mx-auto px-4 py-8 mt-16">
           <BlogViewSkeleton />
@@ -194,19 +192,21 @@ function BlogView() {
 
   if (!blog) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen pattern-bg">
         <Navbar />
         <div className="container mx-auto px-4 py-8 mt-16 text-center">
-          <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Blog post not found</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">
-            The story you're looking for doesn't exist or has been removed
-          </p>
-          <button
-            onClick={() => navigate("/blogs")}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors"
-          >
-            Browse all stories
-          </button>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-card-border p-8 max-w-md mx-auto">
+            <h2 className="text-2xl font-bold mb-4 text-gradient">Blog post not found</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              The story you're looking for doesn't exist or has been removed
+            </p>
+            <button
+              onClick={() => navigate("/blogs")}
+              className="btn-primary"
+            >
+              Browse all stories
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -217,16 +217,16 @@ function BlogView() {
   const isAuthor = userData && blog.author && userData._id === blog.author._id
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen pattern-bg">
       <Navbar />
       <div className="container mx-auto px-4 py-8 mt-16">
-        <article className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 md:p-8">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight text-gray-900 dark:text-gray-100">
+        <article className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-card-border p-6 md:p-8 animate-fadeIn">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight text-gradient">
             {blog.title}
           </h1>
 
           <div className="flex items-center gap-4 mb-6">
-            <div className="h-12 w-12 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-300 font-medium">
+            <div className="h-12 w-12 rounded-full bg-primary-lighter flex items-center justify-center text-primary font-medium">
               {getInitials(blog.author?.name)}
             </div>
 
@@ -251,7 +251,7 @@ function BlogView() {
               {blog.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm"
+                  className="bg-primary-lighter/20 text-primary px-3 py-1 rounded-full text-sm"
                 >
                   {tag}
                 </span>
@@ -293,13 +293,13 @@ function BlogView() {
                 </button>
 
                 {showOptionsMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-card-border z-10">
                     <button
                       onClick={() => {
                         setShowOptionsMenu(false)
                         navigate(`/blog/edit/${blog._id}`)
                       }}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="flex items-center gap-2 w-full px-4 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-xl"
                     >
                       <Edit className="h-4 w-4" />
                       Edit story
@@ -309,7 +309,7 @@ function BlogView() {
                         setShowOptionsMenu(false)
                         handleDeleteBlog()
                       }}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-left text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="flex items-center gap-2 w-full px-4 py-2 text-left text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-xl"
                     >
                       <Trash2 className="h-4 w-4" />
                       Delete story
@@ -320,7 +320,7 @@ function BlogView() {
             )}
           </div>
 
-          <div className="h-px w-full bg-gray-200 dark:bg-gray-700 mb-8"></div>
+          <div className="h-px w-full bg-gradient-to-r from-primary-lighter/30 via-primary-lighter to-primary-lighter/30 mb-8"></div>
 
           {/* Blog content */}
           <div className="prose prose-lg max-w-none dark:prose-invert mb-12 blog-content text-gray-800 dark:text-gray-200" />
@@ -333,4 +333,3 @@ function BlogView() {
 }
 
 export default BlogView
-

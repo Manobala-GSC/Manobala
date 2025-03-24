@@ -4,6 +4,7 @@ import { assets } from '../assets/assets';
 import { AppContent } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { Mail, Lock } from 'lucide-react';
 
 function ResetPassword() {
   const { backendUrl } = useContext(AppContent);
@@ -81,99 +82,133 @@ function ResetPassword() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-blue-200 to-purple-400">
+    <div className="flex items-center justify-center min-h-screen pattern-bg">
       <img
         onClick={() => navigate('/')}
-        src={assets.logo}
+        src={assets.logo || "/placeholder.svg"}
         alt="Logo"
         className="absolute left-5 sm:left-20 top-5 w-28 sm:w-32 cursor-pointer"
       />
 
-      {!isEmailSent && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmitEmail();
-          }}
-          className="bg-slate-900 p-8 rounded-lg shadow-lg w-96 text-sm"
-        >
-          <h1 className="text-white text-2xl font-semibold text-center mb-4">Reset Password</h1>
-          <p className="text-center mb-6 text-indigo-300">Enter your registered email ID.</p>
-          <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5c]">
-            <img src={assets.mail_icon} alt="Mail Icon" className="w-3 h-3" />
-            <input
-              type="email"
-              placeholder="Email ID"
-              className="bg-transparent outline-none text-white"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-900 text-white mt-3"
+      <div className="relative w-full sm:w-96 max-w-md mx-4">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-light/20 to-primary-lighter/20 rounded-2xl blur-xl"></div>
+        
+        {!isEmailSent && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmitEmail();
+            }}
+            className="relative bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-soft border border-card-border animate-fadeIn"
           >
-            Submit
-          </button>
-        </form>
-      )}
+            <h1 className="text-3xl font-bold text-gradient text-center mb-4">Reset Password</h1>
+            <p className="text-center mb-6 text-gray-600 dark:text-gray-400">Enter your registered email address.</p>
+            
+            <div className="relative mb-6">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-primary">
+                <Mail className="h-5 w-5" />
+              </div>
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="input-field pl-10 w-full"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full py-3 bg-gradient-to-r from-primary to-primary-light text-white rounded-xl shadow-button hover:shadow-lg transition-all duration-300 transform hover:scale-102"
+            >
+              Send Reset Code
+            </button>
+            
+            <p className="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">
+              Remember your password?{' '}
+              <span 
+                onClick={() => navigate('/login')}
+                className="text-primary cursor-pointer hover:text-primary-dark transition-colors font-medium"
+              >
+                Login Here
+              </span>
+            </p>
+          </form>
+        )}
 
-      {isEmailSent && !isOtpSubmitted && (
-        <form onSubmit={onSubmitOtp} className="bg-slate-900 p-8 rounded-lg shadow-lg w-96 text-sm">
-          <h1 className="text-white text-2xl font-semibold text-center mb-4">Reset Password OTP</h1>
-          <p className="text-center mb-6 text-indigo-300">Enter the OTP sent to your email ID.</p>
-          <div className="flex justify-between mb-8 space-x-2" onPaste={handlePaste}>
-            {Array(6)
-              .fill(0)
-              .map((_, index) => (
-                <input
-                  type="text"
-                  maxLength="1"
-                  key={index}
-                  className="w-12 h-12 bg-[#333A5C] text-white text-center text-xl rounded-md"
-                  ref={(el) => (inputRefs.current[index] = el)}
-                  onInput={(e) => handleInput(e, index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  required
-                />
-              ))}
-          </div>
-          <button
-            type="submit"
-            className="w-full py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-900 text-white rounded-full"
+        {isEmailSent && !isOtpSubmitted && (
+          <form 
+            onSubmit={onSubmitOtp} 
+            className="relative bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-soft border border-card-border animate-fadeIn"
           >
-            Submit
-          </button>
-        </form>
-      )}
+            <h1 className="text-3xl font-bold text-gradient text-center mb-4">Verification Code</h1>
+            <p className="text-center mb-6 text-gray-600 dark:text-gray-400">
+              Enter the 6-digit code sent to your email.
+            </p>
+            
+            <div 
+              className="flex justify-between mb-8 space-x-2" 
+              onPaste={handlePaste}
+            >
+              {Array(6)
+                .fill(0)
+                .map((_, index) => (
+                  <input
+                    type="text"
+                    maxLength="1"
+                    key={index}
+                    className="w-12 h-12 bg-primary-lighter/10 text-primary text-center text-xl rounded-lg border border-primary-lighter focus:outline-none focus:ring-2 focus:ring-primary-light focus:border-primary-light transition-all"
+                    ref={(el) => (inputRefs.current[index] = el)}
+                    onInput={(e) => handleInput(e, index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    required
+                  />
+                ))}
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full py-3 bg-gradient-to-r from-primary to-primary-light text-white rounded-xl shadow-button hover:shadow-lg transition-all duration-300 transform hover:scale-102"
+            >
+              Verify Code
+            </button>
+          </form>
+        )}
 
-      {isOtpSubmitted && (
-        <form
-          onSubmit={onSubmitNewPassword}
-          className="bg-slate-900 p-8 rounded-lg shadow-lg w-96 text-sm"
-        >
-          <h1 className="text-white text-2xl font-semibold text-center mb-4">New Password</h1>
-          <p className="text-center mb-6 text-indigo-300">Enter the new password below.</p>
-          <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5c]">
-            <img src={assets.lock_icon} alt="Lock Icon" className="w-3 h-3" />
-            <input
-              type="password"
-              placeholder="Password"
-              className="bg-transparent outline-none text-white"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-900 text-white mt-3"
+        {isOtpSubmitted && (
+          <form
+            onSubmit={onSubmitNewPassword}
+            className="relative bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-soft border border-card-border animate-fadeIn"
           >
-            Submit
-          </button>
-        </form>
-      )}
+            <h1 className="text-3xl font-bold text-gradient text-center mb-4">New Password</h1>
+            <p className="text-center mb-6 text-gray-600 dark:text-gray-400">
+              Create a new secure password.
+            </p>
+            
+            <div className="relative mb-6">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-primary">
+                <Lock className="h-5 w-5" />
+              </div>
+              <input
+                type="password"
+                placeholder="New Password"
+                className="input-field pl-10 w-full"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+              />
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full py-3 bg-gradient-to-r from-primary to-primary-light text-white rounded-xl shadow-button hover:shadow-lg transition-all duration-300 transform hover:scale-102"
+            >
+              Reset Password
+            </button>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

@@ -313,7 +313,7 @@ function ExpertChat() {
   return (
     <div className="min-h-screen pattern-bg bg-[#F5F0FF]">
       <Navbar />
-      <div className="container   mx-auto px-4 py-12 mt-16">
+      <div className="container mx-auto px-4 py-8 pt-20">
         <div className="grid  grid-cols-1 md:grid-cols-4 gap-4">
           {/* Experts/Chats List */}
           <div className="md:col-span-1 bg-gradient-to-b from-primary to-primary-dark backdrop-blur-sm rounded-2xl shadow-card p-4 border border-card-border">
