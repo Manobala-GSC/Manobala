@@ -267,7 +267,7 @@ export default function Home() {
 
           <div className="mt-12 text-center">
             <a
-              href="/testimonials"
+              href="/blogs"
               className="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors"
             >
               <span>Read more success stories</span>
