@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar"
 import { Loader2, Send, Bot, User, Plus, Trash2 } from "lucide-react"
 import Message from "./Message";
 import MessageInput from "./MessageInput";
+import { AppContent } from "../context/AppContext"
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([])
@@ -16,6 +17,7 @@ const ChatBot = () => {
   const { isLoggedin } = useContext(AppContent)
   const messagesEndRef = useRef(null)
   const [inputValue, setInputValue] = useState("")
+  const { userData, backendUrl, isLoading: authLoading } = useContext(AppContent)
 
   useEffect(() => {
     if (isLoggedin) {
@@ -30,7 +32,7 @@ const ChatBot = () => {
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/conversations", {
+      const response = await axios.get(`${backendUrl}/api/conversations`, {
         withCredentials: true,
       })
       if (response.data.success) {
@@ -44,7 +46,7 @@ const ChatBot = () => {
   const createNewChat = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/conversations",
+        `${backendUrl}/api/conversations`,
         {
           title: "New Chat",
         },
@@ -63,7 +65,7 @@ const ChatBot = () => {
 
   const deleteConversation = async (conversationId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/conversations/${conversationId}`, {
+      await axios.delete(`${backendUrl}/api/conversations/${conversationId}`, {
         withCredentials: true,
       })
       setConversations(conversations.filter((conv) => conv._id !== conversationId))
@@ -78,7 +80,7 @@ const ChatBot = () => {
 
   const loadConversation = async (conversationId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/conversations/${conversationId}/messages`, {
+      const response = await axios.get(`${backendUrl}/api/conversations/${conversationId}/messages`, {
         withCredentials: true,
       })
       if (response.data.success) {
@@ -96,7 +98,7 @@ const ChatBot = () => {
       const title = firstMessage.length > 50 ? firstMessage.substring(0, 47) + "..." : firstMessage
 
       const response = await axios.put(
-        `http://localhost:8000/api/conversations/${conversationId}/title`,
+        `${backendUrl}/api/conversations/${conversationId}/title`,
         { title },
         { withCredentials: true },
       )
@@ -123,7 +125,7 @@ const ChatBot = () => {
     try {
       // Save user message
       await axios.post(
-        `http://localhost:8000/api/conversations/${activeConversation}/messages`,
+        `${backendUrl}/api/conversations/${activeConversation}/messages`,
         {
           text,
           sender: "user",
@@ -167,7 +169,7 @@ const ChatBot = () => {
 
         // Save bot message
         await axios.post(
-          `http://localhost:8000/api/conversations/${activeConversation}/messages`,
+          `${backendUrl}/api/conversations/${activeConversation}/messages`,
           {
             text: botMessage.text,
             sender: "bot",

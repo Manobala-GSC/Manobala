@@ -245,24 +245,25 @@ export default function Home() {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             <TestimonialCard
-              quote="Finding this community changed everything for me. I no longer feel alone in my struggles."
-              author="Alex P."
-              role="Community Member"
-              rating={5}
-            />
-            <TestimonialCard
-              quote="The expert sessions helped me develop coping strategies I use every day. Truly life-changing."
-              author="Jamie L."
-              role="Premium Member"
-              rating={5}
-              featured={true}
-            />
-            <TestimonialCard
-              quote="I was skeptical at first, but the resources and support here have been invaluable on my journey."
-              author="Sam T."
-              role="Community Member"
-              rating={4}
-            />
+  quote="Manobala helped me protect my child when I didn't know where to turn. The support and guidance were life-saving."
+  author="Kunal Khurana"
+  role="Parent & Community Member"
+  rating={5}
+/>
+<TestimonialCard
+  quote="Manobala gave me the strength and resources to leave my abusive marriage. I finally feel free."
+  author="Isha Sharma"
+  role="Survivor & Community Member"
+  rating={5}
+  featured={true}
+/>
+<TestimonialCard
+  quote="Leaving was the hardest thing I’ve ever done, but Manobala helped me every step of the way."
+  author="Suman Aggarwal"
+  role="Survivor"
+  rating={5}
+/>
+
           </motion.div>
 
           <div className="mt-12 text-center">
@@ -429,7 +430,7 @@ export default function Home() {
             <div>
               <h4 className="text-lg font-semibold mb-4">Connect</h4>
               <div className="flex space-x-4">
-                <a href="#" className="text-white/80 hover:text-white transition-colors">
+                <a href="https://x.com/manobala2k25" className="text-white/80 hover:text-white transition-colors">
                   <div className="bg-white/10 p-2 rounded-full hover:bg-white/20 transition-colors">
                     <span className="sr-only">Twitter</span>
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -437,7 +438,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </a>
-                <a href="#" className="text-white/80 hover:text-white transition-colors">
+                <a href="https://www.instagram.com/manobala2k25/" className="text-white/80 hover:text-white transition-colors">
                   <div className="bg-white/10 p-2 rounded-full hover:bg-white/20 transition-colors">
                     <span className="sr-only">Instagram</span>
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -449,7 +450,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </a>
-                <a href="#" className="text-white/80 hover:text-white transition-colors">
+                <a href="https://www.facebook.com/profile.php?id=61574460428139" className="text-white/80 hover:text-white transition-colors">
                   <div className="bg-white/10 p-2 rounded-full hover:bg-white/20 transition-colors">
                     <span className="sr-only">Facebook</span>
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -461,7 +462,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </a>
-                <a href="#" className="text-white/80 hover:text-white transition-colors">
+                <a href="http://www.linkedin.com/in/mano-bala-2k25" className="text-white/80 hover:text-white transition-colors">
                   <div className="bg-white/10 p-2 rounded-full hover:bg-white/20 transition-colors">
                     <span className="sr-only">LinkedIn</span>
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

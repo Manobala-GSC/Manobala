@@ -57,10 +57,10 @@ function About() {
               </p>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-                <TeamMember name="Dr. Sarah Johnson" role="Clinical Psychologist" />
-                <TeamMember name="Michael Chen" role="Community Manager" />
-                <TeamMember name="Aisha Patel" role="Content Director" />
-                <TeamMember name="Robert Garcia" role="Technology Lead" />
+                <TeamMember name="Sankalp Brahmapurkar" role="Team Leader" />
+                <TeamMember name="Parth Agrawal" role="Team member" />
+                <TeamMember name="Siddhartha Srivastava" role="Team member" />
+                <TeamMember name="Kunal Khurana" role="Team member" />
               </div>
             </div>
           </section>

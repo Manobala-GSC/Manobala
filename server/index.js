@@ -23,11 +23,12 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Updated CORS configuration
 app.use(cors({
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+    origin: "*",  // Allows requests from any origin
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
 
 app.use(cookieParser());
 
