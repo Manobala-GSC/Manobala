@@ -54,10 +54,6 @@ export default function Home() {
                     <Shield className="h-5 w-5 text-primary" />
                     <span className="font-medium text-sm">100% Confidential</span>
                   </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl shadow-soft border border-card-border">
-                    <Users className="h-5 w-5 text-primary" />
-                    <span className="font-medium text-sm">10,000+ Active Users</span>
-                  </div>
                 </div>
                 <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-primary-lighter/30 to-primary-lighter/10 rounded-xl border border-primary-lighter/30 shadow-soft">
                   <div className="p-2 bg-white rounded-lg shadow-sm">

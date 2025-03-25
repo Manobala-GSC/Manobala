@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar"
 import { Loader2, Send, Bot, User, Plus, Trash2 } from "lucide-react"
 import Message from "./Message";
 import MessageInput from "./MessageInput";
-import { AppContent } from "../context/AppContext"
+
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([])
