@@ -1,0 +1,4 @@
+﻿{
+  "builds": [{ "src": "package.json", "use": "@vercel/node" }],
+  "installCommand": "npm install --ignore-scripts"
+}
