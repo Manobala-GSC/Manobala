@@ -51,9 +51,7 @@ function About() {
             <h2 className="text-2xl font-semibold mb-6 text-primary-light">Our Team</h2>
             <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100">
               <p className="text-gray-600 leading-relaxed mb-6">
-                Our team consists of mental health professionals, advocates, educators, and technology experts committed
-                to creating a supportive and informative platform. We work together to ensure that our resources are
-                accurate, accessible, and helpful for those who need them.
+                Our team is dedicated to creating a platform that empowers victims of abuse and their families. We combine expertise in mental health, legal guidance, education, and technology to provide accurate, accessible, and supportive resources. Together, we strive to ensure that individuals facing child abuse, domestic violence, or workplace harassment receive the help they need in a safe and informed environment.
               </p>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
