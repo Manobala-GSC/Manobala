@@ -7,16 +7,24 @@ export const getAllBlogs = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 9;
     const skip = (page - 1) * limit;
+    const search = req.query.search || '';
+
+    // Create search query - only search in title
+    const searchQuery = search
+      ? {
+          title: { $regex: search, $options: 'i' }
+        }
+      : {};
 
     const [blogs, total] = await Promise.all([
-      Blog.find()
+      Blog.find(searchQuery)
         .populate('author', 'name')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean()
         .exec(),
-      Blog.countDocuments()
+      Blog.countDocuments(searchQuery)
     ]);
 
     // Make sure likes are included in the response

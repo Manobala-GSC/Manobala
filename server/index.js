@@ -23,7 +23,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Updated CORS configuration
 app.use(cors({
-    origin: "https://manobala.netlify.app",  // Allows requests from any origin
+    origin: ["https://manobala.netlify.app","http://localhost:5173"] , // Allows requests from any origin
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
@@ -52,7 +52,7 @@ const httpServer = createServer(app);
 // Initialize Socket.IO with proper configuration
 const io = new Server(httpServer, {
     cors: {
-        origin: ["https://manobala.netlify.app"],
+        origin: ["https://manobala.netlify.app","http://localhost:5173"],
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
         credentials: true
     },

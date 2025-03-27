@@ -214,9 +214,9 @@ const ChatBot = () => {
                           }`}
                         onClick={() => loadConversation(conv._id)}
                       >
-                        <div className="flex items-center">
+                        <div className="flex items-center flex-nowrap min-w-0">
                           <Bot className="h-5 w-5 mr-3 flex-shrink-0" />
-                          <span className="truncate">{conv.title}</span>
+                          <span className="truncate flex-1">{conv.title}</span>
                         </div>
                         <button
                           onClick={(e) => {

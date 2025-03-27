@@ -4,12 +4,35 @@ import { motion } from "framer-motion"
 import { useNavigate } from "react-router-dom"
 import { ArrowRight, MessageCircle, BookOpen, Heart, Users, Shield, Brain, ChevronRight } from "lucide-react"
 import img1 from "../assets/img1.png"
-import { useContext } from "react"
+import { useContext, useState, useEffect } from "react"
 import { AppContent } from "../context/AppContext"
+import BlogCard from "../components/blog/BlogCard"
+import axios from "axios"
 
 export default function Home() {
   const navigate = useNavigate()
-  const { userData, isLoggedin } = useContext(AppContent)
+  const { userData, isLoggedin, backendUrl } = useContext(AppContent)
+  const [blogs, setBlogs] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const { data } = await axios.get(`${backendUrl}/api/blogs?page=1&limit=3`, {
+          withCredentials: true,
+        })
+        if (data.success) {
+          setBlogs(data.blogs)
+        }
+      } catch (error) {
+        console.error("Error fetching blogs:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBlogs()
+  }, [backendUrl])
 
   const handleNavigation = (path) => {
     console.log("Navigating to:", path)
@@ -229,7 +252,7 @@ export default function Home() {
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Community Stories</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Hear from members who have found support and growth through our platform.
+              Read inspiring stories and insights shared by our community members.
             </p>
           </motion.div>
 
@@ -240,37 +263,50 @@ export default function Home() {
             variants={staggerContainer}
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
-            <TestimonialCard
-  quote="Manobala helped me protect my child when I didn't know where to turn. The support and guidance were life-saving."
-  author="Kunal Khurana"
-  role="Parent & Community Member"
-  rating={5}
-/>
-<TestimonialCard
-  quote="Manobala gave me the strength and resources to leave my abusive marriage. I finally feel free."
-  author="Isha Sharma"
-  role="Survivor & Community Member"
-  rating={5}
-  featured={true}
-/>
-<TestimonialCard
-  quote="Leaving was the hardest thing I’ve ever done, but Manobala helped me every step of the way."
-  author="Suman Aggarwal"
-  role="Survivor"
-  rating={5}
-/>
-
+            {loading ? (
+              // Loading skeleton
+              [...Array(3)].map((_, index) => (
+                <div key={index} className="animate-pulse bg-white rounded-2xl shadow-soft border border-card-border p-6">
+                  <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="h-8 w-8 rounded-full bg-gray-200"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  </div>
+                </div>
+              ))
+            ) : blogs.length > 0 ? (
+              blogs.map((blog) => (
+                <BlogCard key={blog._id} blog={blog} />
+              ))
+            ) : (
+              <div className="col-span-3 text-center py-8">
+                <p className="text-gray-500">No stories available at the moment.</p>
+              </div>
+            )}
           </motion.div>
 
-          <div className="mt-12 text-center">
-            <a
-              href="/blogs"
-              className="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors"
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+            className="text-center mt-12"
+          >
+            <button
+              onClick={() => handleNavigation("/blogs")}
+              className="inline-flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
             >
-              <span>Read more success stories</span>
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </a>
-          </div>
+              View All Stories <ChevronRight className="h-4 w-4" />
+            </button>
+          </motion.div>
         </div>
       </section>
 
@@ -466,20 +502,6 @@ export default function Home() {
                     </svg>
                   </div>
                 </a>
-              </div>
-
-              <div className="mt-6">
-                <h5 className="text-sm font-semibold mb-2">Subscribe to our newsletter</h5>
-                <div className="flex">
-                  <input
-                    type="email"
-                    placeholder="Your email"
-                    className="bg-white/10 text-white placeholder:text-white/50 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-white/30 w-full"
-                  />
-                  <button className="bg-primary px-4 py-2 rounded-r-lg hover:bg-primary-light transition-colors">
-                    Subscribe
-                  </button>
-                </div>
               </div>
             </div>
           </div>

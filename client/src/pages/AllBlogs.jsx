@@ -7,7 +7,7 @@ import { toast } from "react-toastify"
 import Navbar from "../components/Navbar"
 import { AppContent } from "../context/AppContext"
 import BlogCard from "../components/blog/BlogCard"
-import { Edit, Loader2, Search, Filter, X } from "lucide-react"
+import { Edit, Loader2, Search } from "lucide-react"
 
 function AllBlogs() {
   const [blogs, setBlogs] = useState([])
@@ -17,23 +17,6 @@ function AllBlogs() {
   const [initialLoad, setInitialLoad] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [isSearching, setIsSearching] = useState(false)
-  const [showFilters, setShowFilters] = useState(false)
-  const [filters, setFilters] = useState({
-    sortBy: "newest",
-    tags: [],
-  })
-  const [availableTags, setAvailableTags] = useState([
-    "mental health",
-    "self-care",
-    "wellness",
-    "anxiety",
-    "depression",
-    "mindfulness",
-    "therapy",
-    "stress",
-    "healing",
-    "support",
-  ])
 
   const navigate = useNavigate()
   const { backendUrl } = useContext(AppContent)
@@ -55,15 +38,13 @@ function AllBlogs() {
     [loading, hasMore],
   )
 
-  const fetchBlogs = async (pageNum, search = "", filterParams = filters) => {
+  const fetchBlogs = async (pageNum, search = "") => {
     try {
       setLoading(true)
       const searchParam = search ? `&search=${encodeURIComponent(search)}` : ""
-      const sortParam = `&sort=${filterParams.sortBy}`
-      const tagsParam = filterParams.tags.length > 0 ? `&tags=${filterParams.tags.join(",")}` : ""
 
       const { data } = await axios.get(
-        `${backendUrl}/api/blogs?page=${pageNum}&limit=9${searchParam}${sortParam}${tagsParam}`,
+        `${backendUrl}/api/blogs?page=${pageNum}&limit=9${searchParam}`,
         { withCredentials: true },
       )
 
@@ -107,7 +88,7 @@ function AllBlogs() {
 
   useEffect(() => {
     if (page > 1 && !isSearching) {
-      fetchBlogs(page, searchTerm, filters)
+      fetchBlogs(page, searchTerm)
     }
   }, [page])
 
@@ -116,35 +97,7 @@ function AllBlogs() {
     e.preventDefault()
     setIsSearching(true)
     setPage(1)
-    fetchBlogs(1, searchTerm, filters)
-  }
-
-  // Handle filter changes
-  const handleFilterChange = (filterType, value) => {
-    const newFilters = { ...filters }
-
-    if (filterType === "sortBy") {
-      newFilters.sortBy = value
-    } else if (filterType === "tags") {
-      if (newFilters.tags.includes(value)) {
-        newFilters.tags = newFilters.tags.filter((tag) => tag !== value)
-      } else {
-        newFilters.tags = [...newFilters.tags, value]
-      }
-    }
-
-    setFilters(newFilters)
-    setPage(1)
-    fetchBlogs(1, searchTerm, newFilters)
-  }
-
-  // Clear all filters
-  const clearFilters = () => {
-    const newFilters = { sortBy: "newest", tags: [] }
-    setFilters(newFilters)
-    setSearchTerm("")
-    setPage(1)
-    fetchBlogs(1, "", newFilters)
+    fetchBlogs(1, searchTerm)
   }
 
   // Handle like updates at the page level
@@ -184,22 +137,6 @@ function AllBlogs() {
             </form>
 
             <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`px-3 py-2 border rounded-lg transition-colors flex items-center gap-1 ${
-                showFilters || filters.tags.length > 0
-                  ? "bg-primary-lighter/20 border-primary-lighter text-primary"
-                  : "border-gray-300 text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <Filter className="h-4 w-4" />
-              {filters.tags.length > 0 && (
-                <span className="text-xs bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center">
-                  {filters.tags.length}
-                </span>
-              )}
-            </button>
-
-            <button
               onClick={() => navigate("/blog/new")}
               className="bg-gradient-to-r from-primary to-primary-light hover:opacity-90 text-white px-4 py-2 rounded-lg transition-all flex items-center gap-2 whitespace-nowrap shadow-md"
             >
@@ -208,61 +145,6 @@ function AllBlogs() {
             </button>
           </div>
         </div>
-
-        {/* Filters panel */}
-        {showFilters && (
-          <div className="bg-white p-4 rounded-xl shadow-md mb-6 border border-gray-200 animate-fadeIn">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-medium text-primary">Filter Stories</h3>
-              <button
-                onClick={clearFilters}
-                className="text-sm text-gray-500 hover:text-primary transition-colors flex items-center gap-1"
-              >
-                <X className="h-3 w-3" /> Clear all
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="text-sm font-medium mb-2 text-gray-700">Sort by</h4>
-                <div className="flex flex-wrap gap-2">
-                  {["newest", "oldest", "popular"].map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => handleFilterChange("sortBy", option)}
-                      className={`px-3 py-1 text-sm rounded-full transition-colors ${
-                        filters.sortBy === option
-                          ? "bg-primary text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {option.charAt(0).toUpperCase() + option.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-sm font-medium mb-2 text-gray-700">Tags</h4>
-                <div className="flex flex-wrap gap-2">
-                  {availableTags.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => handleFilterChange("tags", tag)}
-                      className={`px-3 py-1 text-sm rounded-full transition-colors ${
-                        filters.tags.includes(tag)
-                          ? "bg-primary text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {initialLoad ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -317,18 +199,18 @@ function AllBlogs() {
               <Search className="h-8 w-8 text-primary" />
             </div>
             <h3 className="text-xl font-medium mb-2 text-primary">
-              {searchTerm || filters.tags.length > 0
-                ? "No stories found matching your search"
-                : "No stories available yet"}
+              {searchTerm ? "No stories found matching your search" : "No stories available yet"}
             </h3>
             <p className="text-gray-600 mb-6">
-              {searchTerm || filters.tags.length > 0
-                ? "Try a different search term or browse all stories"
-                : "Be the first to share your ideas with the community"}
+              {searchTerm ? "Try a different search term or browse all stories" : "Be the first to share your ideas with the community"}
             </p>
-            {searchTerm || filters.tags.length > 0 ? (
+            {searchTerm ? (
               <button
-                onClick={clearFilters}
+                onClick={() => {
+                  setSearchTerm("")
+                  setPage(1)
+                  fetchBlogs(1)
+                }}
                 className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 View all stories

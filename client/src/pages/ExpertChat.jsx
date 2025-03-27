@@ -114,11 +114,37 @@ function ExpertChat() {
           return [...prev, newMessage]
         })
 
+        // Update the chat's last message in the sidebar without refetching
+        setChats((prevChats) => {
+          return prevChats.map((chat) => {
+            if (chat._id === data.chatId) {
+              return {
+                ...chat,
+                lastMessage: new Date().toISOString(),
+                lastMessageContent: data.message.content
+              }
+            }
+            return chat
+          })
+        })
+
         // Scroll to bottom
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+      } else {
+        // If message is for a different chat, just update that chat's last message
+        setChats((prevChats) => {
+          return prevChats.map((chat) => {
+            if (chat._id === data.chatId) {
+              return {
+                ...chat,
+                lastMessage: new Date().toISOString(),
+                lastMessageContent: data.message.content
+              }
+            }
+            return chat
+          })
+        })
       }
-      // Refresh chat list to update last message time
-      fetchChats()
     })
 
     // Listen for typing indicators
@@ -316,7 +342,7 @@ function ExpertChat() {
       <div className="container mx-auto px-4 py-8 pt-20">
         <div className="grid  grid-cols-1 md:grid-cols-4 gap-4">
           {/* Experts/Chats List */}
-          <div className="md:col-span-1 bg-gradient-to-b from-primary to-primary-dark backdrop-blur-sm rounded-2xl shadow-card p-4 border border-card-border">
+          <div className="md:col-span-1 bg-gradient-to-b from-primary to-primary-dark backdrop-blur-sm rounded-2xl shadow-card p-4 border border-card-border h-[600px] overflow-hidden flex flex-col">
             {isExpert ? (
               // Expert View - Only Active Chats with User Names
               <div className="h-full flex flex-col">
@@ -377,84 +403,36 @@ function ExpertChat() {
               </div>
             ) : (
               // Regular User View - Available Experts and Active Chats
-              <div className="h-full flex flex-col">
-                {/* Available Experts Section */}
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold mb-4 flex items-center text-white bg-gradient-to-r from-purple-500 to-purple-700 px-4 py-2 rounded-lg shadow-md">
-                    <UserCheck className="h-5 w-5 mr-2" />
-                    Available Experts
-                  </h2>
+              <div className="h-full flex flex-col overflow-hidden">
+                {/* Wrapper for both sections with single scrollbar */}
+                <div className="overflow-y-auto flex-1 custom-scrollbar pr-2">
+                  {/* Available Experts Section */}
+                  <div className="mb-4">
+                    <h2 className="text-xl font-bold mb-4 flex items-center text-white bg-gradient-to-r from-purple-500 to-purple-700 px-4 py-2 rounded-lg shadow-md sticky top-0 z-10">
+                      <UserCheck className="h-5 w-5 mr-2" />
+                      Available Experts
+                    </h2>
 
-
-                  {loadingChats ? (
-                    <div className="flex items-center justify-center py-4">
-                      <Loader2 className="h-6 w-6 text-primary animate-spin" />
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      {experts.length > 0 ? (
-                        experts.map((expert) => (
-                          <div
-                            key={`expert-${expert._id}`}
-                            className="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition-all hover:shadow-md"
-                            onClick={() => startChat(expert._id)}
-                          >
-                            <div className="flex items-center">
-                              <div className="h-10 w-10 rounded-full bg-primary-lighter/30 flex items-center justify-center text-primary font-bold mr-3">
-                                {expert.name.charAt(0)}
-                              </div>
-                              <div>
-                                <p className="font-medium text-primary">{expert.name}</p>
-                                <p className="text-xs text-gray-500">{expert.email}</p>
-                                <div className="flex items-center mt-1">
-                                  <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full flex items-center">
-                                    <UserCheck className="h-3 w-3 mr-1" /> Expert
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="text-gray-500 text-center py-4 bg-gray-50 rounded-xl">
-                          <p>No experts available at the moment</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Active Chats Section */}
-                <div className="flex-1">
-                  <h2 className="text-xl font-bold mb-4 flex items-center text-white bg-gradient-to-r from-purple-500 to-purple-700 px-4 py-2 rounded-lg shadow-md">
-                    <MessageSquare className="h-5 w-5 mr-2" />
-                    Your Chats
-                  </h2>
-
-
-                  {loadingChats ? (
-                    <div className="flex items-center justify-center py-4">
-                      <Loader2 className="h-6 w-6 text-primary animate-spin" />
-                    </div>
-                  ) : (
-                    <div className="space-y-2 overflow-y-auto">
-                      {chats.length > 0 ? (
-                        chats.map((chat) => (
-                          <div
-                            key={`chat-${chat._id}`}
-                            className={`p-3 rounded-xl cursor-pointer transition-all ${currentChat?._id === chat._id
-                                ? "bg-primary-lighter/20 border border-primary-lighter shadow-md"
-                                : "bg-gray-50 hover:bg-gray-100"
-                              }`}
-                            onClick={() => loadMessages(chat)}
-                          >
-                            <div className="flex justify-between items-start">
-                              <div className="flex items-start">
+                    {loadingChats ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-6 w-6 text-primary animate-spin" />
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {experts.length > 0 ? (
+                          experts.map((expert) => (
+                            <div
+                              key={`expert-${expert._id}`}
+                              className="p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition-all hover:shadow-md"
+                              onClick={() => startChat(expert._id)}
+                            >
+                              <div className="flex items-center">
                                 <div className="h-10 w-10 rounded-full bg-primary-lighter/30 flex items-center justify-center text-primary font-bold mr-3">
-                                  {chat.expert.name.charAt(0)}
+                                  {expert.name.charAt(0)}
                                 </div>
                                 <div>
-                                  <p className="font-medium text-primary">{chat.expert.name}</p>
+                                  <p className="font-medium text-primary">{expert.name}</p>
+                                  <p className="text-xs text-gray-500">{expert.email}</p>
                                   <div className="flex items-center mt-1">
                                     <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full flex items-center">
                                       <UserCheck className="h-3 w-3 mr-1" /> Expert
@@ -462,26 +440,75 @@ function ExpertChat() {
                                   </div>
                                 </div>
                               </div>
-                              {chat.lastMessage && (
-                                <p className="text-xs text-gray-400">{formatTime(chat.lastMessage)}</p>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-gray-500 text-center py-4 bg-gray-50 rounded-xl">
+                            <p>No experts available at the moment</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Active Chats Section */}
+                  <div>
+                    <h2 className="text-xl font-bold mb-4 flex items-center text-white bg-gradient-to-r from-purple-500 to-purple-700 px-4 py-2 rounded-lg shadow-md sticky top-0 z-10">
+                      <MessageSquare className="h-5 w-5 mr-2" />
+                      Your Chats
+                    </h2>
+
+                    {loadingChats ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-6 w-6 text-primary animate-spin" />
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {chats.length > 0 ? (
+                          chats.map((chat) => (
+                            <div
+                              key={`chat-${chat._id}`}
+                              className={`p-3 rounded-xl cursor-pointer transition-all ${currentChat?._id === chat._id
+                                  ? "bg-primary-lighter/20 border border-primary-lighter shadow-md"
+                                  : "bg-gray-50 hover:bg-gray-100"
+                                }`}
+                              onClick={() => loadMessages(chat)}
+                            >
+                              <div className="flex justify-between items-start">
+                                <div className="flex items-start">
+                                  <div className="h-10 w-10 rounded-full bg-primary-lighter/30 flex items-center justify-center text-primary font-bold mr-3">
+                                    {chat.expert.name.charAt(0)}
+                                  </div>
+                                  <div>
+                                    <p className="font-medium text-primary">{chat.expert.name}</p>
+                                    <div className="flex items-center mt-1">
+                                      <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full flex items-center">
+                                        <UserCheck className="h-3 w-3 mr-1" /> Expert
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                {chat.lastMessage && (
+                                  <p className="text-xs text-gray-400">{formatTime(chat.lastMessage)}</p>
+                                )}
+                              </div>
+                              {chat.lastMessageContent && (
+                                <p className="text-sm text-gray-600 mt-2 truncate pl-12">{chat.lastMessageContent}</p>
                               )}
                             </div>
-                            {chat.lastMessageContent && (
-                              <p className="text-sm text-gray-600 mt-2 truncate pl-12">{chat.lastMessageContent}</p>
-                            )}
+                          ))
+                        ) : (
+                          <div className="text-gray-500 text-center py-8 flex flex-col items-center">
+                            <MessageSquare className="h-8 w-8 text-gray-300 mb-2" />
+                            <p>No active chats</p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              Start a conversation with an expert from the list above
+                            </p>
                           </div>
-                        ))
-                      ) : (
-                        <div className="text-gray-500 text-center py-8 flex flex-col items-center">
-                          <MessageSquare className="h-8 w-8 text-gray-300 mb-2" />
-                          <p>No active chats</p>
-                          <p className="text-xs text-gray-400 mt-1">
-                            Start a conversation with an expert from the list above
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
@@ -514,15 +541,11 @@ function ExpertChat() {
                         </span>
                       </div>
                     </div>
-                    <div className="text-xs text-gray-500 flex items-center">
-                      <Clock className="h-3 w-3 mr-1" />
-                      Chat started {new Date(currentChat.createdAt).toLocaleDateString()}
-                    </div>
                   </div>
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4">
+                <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
                   {loadingMessages ? (
                     <div className="h-full flex items-center justify-center">
                       <Loader2 className="h-8 w-8 text-primary animate-spin" />
@@ -625,6 +648,35 @@ function ExpertChat() {
           </div>
         </div>
       </div>
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(156, 163, 175, 0.5);
+          border-radius: 10px;
+          transition: all 0.2s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(156, 163, 175, 0.8);
+        }
+
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+        }
+
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+          background: rgba(156, 163, 175, 0.8);
+        }
+      `}</style>
     </div>
   )
 }

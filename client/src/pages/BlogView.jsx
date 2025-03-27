@@ -277,11 +277,6 @@ function BlogView() {
               <span className="text-sm">Share</span>
             </button>
 
-            <button className="flex items-center gap-1.5 px-3 py-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-              <BookmarkPlus className="h-4 w-4" />
-              <span className="text-sm">Save</span>
-            </button>
-
             {isAuthor && (
               <div className="relative ml-auto">
                 <button
