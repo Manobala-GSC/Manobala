@@ -374,7 +374,6 @@ function ExpertChat() {
                               </div>
                               <div>
                                 <p className="font-medium text-primary">{chat.user?.name}</p>
-                                <p className="text-xs text-gray-500">{chat.user?.email}</p>
                                 <div className="flex items-center mt-1">
                                   <span className="text-xs px-2 py-1 bg-green-100 text-green-600 rounded-full">
                                     User
@@ -432,7 +431,6 @@ function ExpertChat() {
                                 </div>
                                 <div>
                                   <p className="font-medium text-primary">{expert.name}</p>
-                                  <p className="text-xs text-gray-500">{expert.email}</p>
                                   <div className="flex items-center mt-1">
                                     <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full flex items-center">
                                       <UserCheck className="h-3 w-3 mr-1" /> Expert
