@@ -140,6 +140,7 @@ const ChatBot = () => {
 
       // Get AI response
       const response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyAvFkYegxeyJStubkoNiuHe-zYhbDs7w6U`,
         {
           contents: [{
             parts: [{
